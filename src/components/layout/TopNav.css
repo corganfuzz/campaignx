@@ -1,0 +1,130 @@
+.topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 20px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #2e2e2e;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 8px;
+}
+
+.topnav-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topnav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topnav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  transition: background 0.15s;
+}
+
+.topnav-logo:hover {
+  background: #2a2a2a;
+}
+
+.logo-icon {
+  color: #0d99ff;
+  font-size: 16px;
+}
+
+.topnav-divider {
+  width: 1px;
+  height: 20px;
+  background: #2e2e2e;
+  margin: 0 6px;
+}
+
+.topnav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #aaa;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.topnav-btn:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.topnav-btn.active {
+  color: #fff;
+  background: #2a2a2a;
+}
+
+.topnav-btn.accent {
+  background: #0d99ff;
+  color: #fff;
+  font-weight: 600;
+}
+
+.topnav-btn.accent:hover {
+  background: #0b85e0;
+}
+
+.topnav-select {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  color: #aaa;
+  font-size: 13px;
+  padding: 5px 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+.topnav-select:hover {
+  border-color: #555;
+}
+
+.topnav-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #0d99ff;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .topnav-select,
+  .topnav-btn:not(.accent):not(.topnav-logo) {
+    display: none;
+  }
+
+  .topnav-left {
+    gap: 2px;
+  }
+}
