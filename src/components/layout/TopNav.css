@@ -2,10 +2,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
+  height: 60px;
   padding: 0 20px;
-  background: #1a1a1a;
-  border-bottom: 1px solid #2e2e2e;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -33,26 +33,32 @@
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 6px;
-  color: #fff;
-  font-size: 15px;
+  color: var(--text-primary);
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.3px;
   transition: background 0.15s;
 }
 
 .topnav-logo:hover {
-  background: #2a2a2a;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
 }
 
 .logo-icon {
-  color: #0d99ff;
+  color: var(--accent);
   font-size: 16px;
 }
 
 .topnav-divider {
   width: 1px;
   height: 20px;
-  background: #2e2e2e;
+  background: var(--border-subtle);
   margin: 0 6px;
 }
 
@@ -62,7 +68,7 @@
   cursor: pointer;
   padding: 6px 12px;
   border-radius: 6px;
-  color: #aaa;
+  color: var(--text-secondary);
   font-size: 13px;
   font-weight: 500;
   transition: all 0.15s;
@@ -70,30 +76,30 @@
 }
 
 .topnav-btn:hover {
-  background: #2a2a2a;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
 }
 
 .topnav-btn.active {
-  color: #fff;
-  background: #2a2a2a;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .topnav-btn.accent {
-  background: #0d99ff;
+  background: var(--accent);
   color: #fff;
   font-weight: 600;
 }
 
 .topnav-btn.accent:hover {
-  background: #0b85e0;
+  filter: brightness(1.1);
 }
 
 .topnav-select {
-  background: #2a2a2a;
-  border: 1px solid #3a3a3a;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
   border-radius: 6px;
-  color: #aaa;
+  color: var(--text-secondary);
   font-size: 13px;
   padding: 5px 10px;
   cursor: pointer;
@@ -101,14 +107,15 @@
 }
 
 .topnav-select:hover {
-  border-color: #555;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
 }
 
 .topnav-avatar {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #0d99ff;
+  background: var(--accent);
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -119,6 +126,7 @@
 }
 
 @media (max-width: 768px) {
+
   .topnav-select,
   .topnav-btn:not(.accent):not(.topnav-logo) {
     display: none;

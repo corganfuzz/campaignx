@@ -176,6 +176,54 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack }: CanvasProps) => {
               )}
             </div>
           </div>
+          {/* Block H: Output Files */}
+          <div className="block block-output">
+            <div className="block-header">
+              <span className="block-label">📁 Output Files</span>
+              <span className="output-saved-badge">✅ Saved locally</span>
+            </div>
+            <div className="output-report-row">
+              <div className="output-stat">
+                <span className="output-stat-num">6</span>
+                <span className="output-stat-label">Assets generated</span>
+              </div>
+              <div className="output-stat">
+                <span className="output-stat-num">2</span>
+                <span className="output-stat-label">Products processed</span>
+              </div>
+              <div className="output-stat">
+                <span className="output-stat-num">18.4s</span>
+                <span className="output-stat-label">Generation time</span>
+              </div>
+              <div className="output-stat warn">
+                <span className="output-stat-num">1</span>
+                <span className="output-stat-label">Legal flags</span>
+              </div>
+            </div>
+            <div className="output-tree">
+              {blueprints.map((bp) => (
+                <div key={bp.id} className="output-folder">
+                  <div className="output-folder-name">
+                    📁 {bp.product.toLowerCase().replace(/ /g, '_')}/
+                  </div>
+                  {(['1x1', '9x16', '16x9'] as const).map((ratio) => (
+                    <div key={ratio} className="output-file-row">
+                      <span className="output-file-icon">🖼</span>
+                      <span className="output-file-name">
+                        [{ratio.replace('x', ':')}] campaign_{bp.region.toLowerCase()}.png
+                      </span>
+                      <button
+                        className="output-download-btn"
+                        onClick={() => alert(`Downloading ${ratio}...`)}
+                      >
+                        ↓
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* Block G: Next Steps */}
           <div className="block block-next-steps">

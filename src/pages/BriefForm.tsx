@@ -15,6 +15,37 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
   const [audience, setAudience] = useState(prefill?.audience ?? '')
   const [message, setMessage] = useState(prefill?.message ?? '')
   const [language, setLanguage] = useState(prefill?.language ?? 'pt-BR')
+  const [briefFile, setBriefFile] = useState<File | null>(null)
+
+  const handleBriefFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setBriefFile(file)
+    const text = await file.text()
+    try {
+      let parsed: Partial<BriefFormData> = {}
+      if (file.name.endsWith('.json')) {
+        parsed = JSON.parse(text)
+      } else {
+        // Basic YAML key: value parser (no library needed for simple flat YAML)
+        parsed = Object.fromEntries(
+          text.split('\n')
+            .filter(l => l.includes(':'))
+            .map(l => {
+              const [k, ...v] = l.split(':')
+              return [k.trim(), v.join(':').trim()]
+            })
+        ) as Partial<BriefFormData>
+      }
+      if (parsed.products) setProducts(Array.isArray(parsed.products) ? parsed.products : [parsed.products as unknown as string])
+      if (parsed.region) setRegion(parsed.region)
+      if (parsed.audience) setAudience(parsed.audience)
+      if (parsed.message) setMessage(parsed.message)
+      if (parsed.language) setLanguage(parsed.language)
+    } catch {
+      alert('Could not parse file. Please check the format.')
+    }
+  }
 
   const selectedRegion = REGIONS.find((r) => r.key === region)
 
@@ -130,7 +161,39 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
           </div>
         </div>
 
-        {/* Asset Upload */}
+        {/* Brief File Upload */}
+        <div className="form-section">
+          <label className="form-label">
+            Import Brief File <span className="form-optional">optional — JSON or YAML</span>
+          </label>
+          <div
+            className={`form-dropzone ${briefFile ? 'loaded' : ''}`}
+            onClick={() => document.getElementById('brief-file-input')?.click()}
+          >
+            <input
+              id="brief-file-input"
+              type="file"
+              accept=".json,.yaml,.yml"
+              style={{ display: 'none' }}
+              onChange={handleBriefFileUpload}
+            />
+            {briefFile ? (
+              <>
+                <div className="form-dropzone-icon">✅</div>
+                <div className="form-dropzone-text">{briefFile.name}</div>
+                <div className="form-dropzone-sub">Brief loaded — form fields pre-filled</div>
+              </>
+            ) : (
+              <>
+                <div className="form-dropzone-icon">📄</div>
+                <div className="form-dropzone-text">Upload brief.json or brief.yaml</div>
+                <div className="form-dropzone-sub">Auto-fills all fields below</div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Brand Asset Upload */}
         <div className="form-section">
           <label className="form-label">
             Existing Brand Assets <span className="form-optional">optional</span>

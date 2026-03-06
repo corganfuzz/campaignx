@@ -1,39 +1,21 @@
-import type { AppView } from '../../hooks/useCampaign'
 import { DOMAINS } from '../../data/mockData'
+import logo from '../../assets/logo.svg'
 import './TopNav.css'
 
 interface TopNavProps {
-  view: AppView
   onHome: () => void
-  onNewCampaign: () => void
 }
 
-export const TopNav = ({ view, onHome, onNewCampaign }: TopNavProps) => {
+export const TopNav = ({ onHome }: TopNavProps) => {
   return (
     <nav className="topnav">
       <div className="topnav-left">
         <button className="topnav-logo" onClick={onHome}>
-          <span className="logo-icon">✦</span>
-          <span className="logo-text">CampaignX</span>
+          <img src={logo} alt="Concrete Focus" className="brand-logo" />
+          <span className="logo-text">Concrete Focus</span>
         </button>
 
         <div className="topnav-divider" />
-
-        <button
-          className={`topnav-btn ${view === 'home' ? 'active' : ''}`}
-          onClick={onHome}
-        >
-          Home
-        </button>
-
-        <button
-          className="topnav-btn accent"
-          onClick={onNewCampaign}
-        >
-          + New Campaign
-        </button>
-
-        <button className="topnav-btn">Guides</button>
 
         <select className="topnav-select">
           {DOMAINS.map((d) => (
@@ -45,7 +27,6 @@ export const TopNav = ({ view, onHome, onNewCampaign }: TopNavProps) => {
       </div>
 
       <div className="topnav-right">
-        <button className="topnav-btn">📎 Data</button>
         <div className="topnav-avatar">GR</div>
       </div>
     </nav>

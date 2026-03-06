@@ -1,10 +1,31 @@
-*, *::before, *::after {
+/* index.css */
+:root {
+  --bg-base: #101010;
+  --bg-surface: #1a1a1a;
+  --bg-container: rgba(30, 30, 30, 0.7);
+  --bg-button: #2c2c2c;
+  --bg-button-hover: #3c3c3c;
+  --text-primary: #f5f5f5;
+  --text-secondary: #a0a0a0;
+  --text-muted: #666666;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-active: #0d99ff;
+  --accent: #0d99ff;
+  --glass-blur: blur(32px);
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-body {
+html,
+body,
+#root {
   margin: 0;
-  background: #141414;
-  color: #f0f0f0;
+  padding: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
   min-height: 100vh;
 }

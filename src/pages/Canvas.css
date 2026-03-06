@@ -58,8 +58,15 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .canvas-title {
@@ -384,9 +391,17 @@
   font-size: 13px;
 }
 
-.compliance-row.pass .compliance-label { color: #aaa; }
-.compliance-row.warn .compliance-label { color: #f5c542; }
-.compliance-row.fail .compliance-label { color: #ff5f5f; }
+.compliance-row.pass .compliance-label {
+  color: #aaa;
+}
+
+.compliance-row.warn .compliance-label {
+  color: #f5c542;
+}
+
+.compliance-row.fail .compliance-label {
+  color: #ff5f5f;
+}
 
 .compliance-icon {
   font-size: 14px;
@@ -479,4 +494,105 @@
   .canvas-tabs {
     padding: 8px 16px 0;
   }
+}
+
+/* Output Files Block */
+.output-saved-badge {
+  font-size: 11px;
+  color: #6bcb77;
+  background: #6bcb7715;
+  border: 1px solid #6bcb7733;
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+
+.output-report-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.output-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.output-stat-num {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f0f0f0;
+  letter-spacing: -0.5px;
+}
+
+.output-stat.warn .output-stat-num {
+  color: #f5c542;
+}
+
+.output-stat-label {
+  font-size: 11px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.output-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #161616;
+  border: 1px solid #252525;
+  border-radius: 8px;
+  padding: 16px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.output-folder {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.output-folder-name {
+  font-size: 13px;
+  color: #0d99ff;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.output-file-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 16px;
+  border-left: 1px solid #2a2a2a;
+}
+
+.output-file-icon {
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.output-file-name {
+  font-size: 12px;
+  color: #888;
+  flex: 1;
+}
+
+.output-download-btn {
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #666;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 3px 8px;
+  transition: all 0.15s;
+}
+
+.output-download-btn:hover {
+  background: #0d99ff18;
+  border-color: #0d99ff44;
+  color: #0d99ff;
 }

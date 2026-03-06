@@ -29,6 +29,7 @@ export const Home = ({ onStartCampaign, onOpenCampaign }: HomeProps) => {
 
   return (
     <div className="home">
+      <div className="home-background-gradient" />
       {/* Hero Input */}
       <div className="home-hero">
         <div className="home-hero-badge">✦ AI Creative Studio</div>
@@ -38,17 +39,35 @@ export const Home = ({ onStartCampaign, onOpenCampaign }: HomeProps) => {
           across all social formats.
         </p>
 
-        <div className="home-input-row">
-          <input
+        <div className="home-input-container">
+          <div className="home-prompt-label">Prompt</div>
+          <textarea
             className="home-input"
-            placeholder="e.g. Dove Shampoo in Brazil for women 25-40..."
+            placeholder="Describe what you want to generate"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
+            rows={2}
           />
-          <button className="home-input-btn" onClick={handleSubmit}>
-            Generate →
-          </button>
+          <div className="home-input-controls">
+            <div className="home-controls-left">
+              <button className="control-btn pilled">
+                <span className="btn-icon">🖼</span> Image
+              </button>
+              <button className="control-btn pilled">
+                <span className="btn-icon">🤖</span> Gemini 2.0 Flash
+              </button>
+              <button className="control-btn more">
+                <span className="btn-icon">⚙️</span> More
+              </button>
+            </div>
+            <button className="home-generate-btn" onClick={handleSubmit}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor" />
+              </svg>
+              <span>Generate</span>
+            </button>
+          </div>
         </div>
 
         <div className="home-chips">

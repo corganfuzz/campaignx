@@ -285,3 +285,17 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.form-dropzone.loaded {
+  border-color: #6bcb7755;
+  background: #6bcb7708;
+}
+
+.form-dropzone.loaded .form-dropzone-icon {
+  font-size: 20px;
+}
+
+.form-dropzone.loaded .form-dropzone-text {
+  color: #6bcb77;
+  font-weight: 500;
+}
