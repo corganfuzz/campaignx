@@ -17,13 +17,6 @@ export const TopNav = ({ onHome }: TopNavProps) => {
 
         <div className="topnav-divider" />
 
-        <select className="topnav-select">
-          {DOMAINS.map((d) => (
-            <option key={d.key} value={d.key}>
-              {d.label}
-            </option>
-          ))}
-        </select>
       </div>
 
       <div className="topnav-right">

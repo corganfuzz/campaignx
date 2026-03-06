@@ -147,13 +147,6 @@ export const REGIONS = [
   { key: 'france', label: '🇫🇷 France', lang: 'French', langCode: 'fr' },
 ]
 
-export const DOMAINS = [
-  { key: 'personal-care', label: 'Personal Care' },
-  { key: 'beauty', label: 'Beauty' },
-  { key: 'food', label: 'Food & Beverage' },
-  { key: 'home', label: 'Home Care' },
-  { key: 'health', label: 'Health & Wellness' },
-]
 
 // Simulate an async API call that runs the pipeline
 export const mockGenerateCampaign = async (
