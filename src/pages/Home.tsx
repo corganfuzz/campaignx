@@ -43,7 +43,7 @@ export const Home = ({ onStartCampaign, onOpenCampaign }: HomeProps) => {
           <div className="home-prompt-label">Prompt</div>
           <textarea
             className="home-input"
-            placeholder="Describe what you want to generate"
+            placeholder="e.g. Dove Shampoo in Brazil for women 25-40"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -52,7 +52,7 @@ export const Home = ({ onStartCampaign, onOpenCampaign }: HomeProps) => {
           <div className="home-input-controls">
             <div className="home-controls-left">
               <button className="control-btn pilled">
-                <span className="btn-icon">🖼</span> Image
+                Image
               </button>
               <button className="control-btn pilled">
                 <span className="btn-icon">🤖</span> Gemini 2.0 Flash
