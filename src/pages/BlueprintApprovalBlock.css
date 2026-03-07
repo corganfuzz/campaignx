@@ -1,0 +1,150 @@
+/* BlueprintApprovalBlock.css */
+
+.approval-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  border: 1px solid transparent;
+}
+
+.approval-badge--pending_review {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.25);
+}
+
+.approval-badge--approved {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.25);
+}
+
+.approval-badge--rejected {
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.25);
+}
+
+.approval-reviewer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.reviewer-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.reviewer-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.reviewer-date {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.reviewer-notes {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.approval-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.approval-notes-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.12s ease;
+  box-sizing: border-box;
+}
+
+.approval-notes-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.approval-notes-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.approval-notes-input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.approval-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-approve,
+.btn-reject {
+  flex: 1;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.12s ease;
+  font-family: inherit;
+}
+
+.btn-approve:disabled,
+.btn-reject:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-approve {
+  background: rgba(52, 211, 153, 0.13);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.28);
+}
+
+.btn-approve:hover:not(:disabled) {
+  background: rgba(52, 211, 153, 0.22);
+  border-color: rgba(52, 211, 153, 0.45);
+}
+
+.btn-reject {
+  background: rgba(248, 113, 113, 0.10);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.22);
+}
+
+.btn-reject:hover:not(:disabled) {
+  background: rgba(248, 113, 113, 0.20);
+  border-color: rgba(248, 113, 113, 0.42);
+}

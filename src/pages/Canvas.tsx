@@ -2,15 +2,17 @@ import { useState } from 'react'
 import type { Blueprint } from '../types'
 import { AICursor } from '../components/shared/AICursor'
 import { ImageDetail } from '../components/shared/ImageDetail'
+import { BlueprintApprovalBlock } from './BlueprintApprovalBlock'
 import './Canvas.css'
 
 interface CanvasProps {
   blueprints: Blueprint[]
   onNewCampaign: () => void
   onBack: () => void
+  submitApproval: (id: string, status: 'approved' | 'rejected', notes?: string) => Promise<void>
 }
 
-export const Canvas = ({ blueprints, onNewCampaign, onBack }: CanvasProps) => {
+export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: CanvasProps) => {
   const [activeTab, setActiveTab] = useState(0)
   const [aiCursorBlock, setAiCursorBlock] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<{ blueprint: Blueprint; ratio: string } | null>(null)
@@ -176,54 +178,6 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack }: CanvasProps) => {
               )}
             </div>
           </div>
-          {/* Block H: Output Files */}
-          <div className="block block-output">
-            <div className="block-header">
-              <span className="block-label">📁 Output Files</span>
-              <span className="output-saved-badge">✅ Saved locally</span>
-            </div>
-            <div className="output-report-row">
-              <div className="output-stat">
-                <span className="output-stat-num">6</span>
-                <span className="output-stat-label">Assets generated</span>
-              </div>
-              <div className="output-stat">
-                <span className="output-stat-num">2</span>
-                <span className="output-stat-label">Products processed</span>
-              </div>
-              <div className="output-stat">
-                <span className="output-stat-num">18.4s</span>
-                <span className="output-stat-label">Generation time</span>
-              </div>
-              <div className="output-stat warn">
-                <span className="output-stat-num">1</span>
-                <span className="output-stat-label">Legal flags</span>
-              </div>
-            </div>
-            <div className="output-tree">
-              {blueprints.map((bp) => (
-                <div key={bp.id} className="output-folder">
-                  <div className="output-folder-name">
-                    📁 {bp.product.toLowerCase().replace(/ /g, '_')}/
-                  </div>
-                  {(['1x1', '9x16', '16x9'] as const).map((ratio) => (
-                    <div key={ratio} className="output-file-row">
-                      <span className="output-file-icon">🖼</span>
-                      <span className="output-file-name">
-                        [{ratio.replace('x', ':')}] campaign_{bp.region.toLowerCase()}.png
-                      </span>
-                      <button
-                        className="output-download-btn"
-                        onClick={() => alert(`Downloading ${ratio}...`)}
-                      >
-                        ↓
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Block G: Next Steps */}
           <div className="block block-next-steps">
@@ -235,13 +189,80 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack }: CanvasProps) => {
                 <button
                   key={step.id}
                   className="next-step-btn"
-                  onClick={() => step.action === 'new-product' || step.action === 'new-region' ? onNewCampaign() : alert(step.label)}
+                  onClick={() =>
+                    step.action === 'new-product' || step.action === 'new-region'
+                      ? onNewCampaign()
+                      : alert(step.label)
+                  }
                 >
                   {step.label}
                 </button>
               ))}
             </div>
           </div>
+
+          {/* Block H: Output Files + Generation Report */}
+          <div className="block block-output">
+            <div className="block-header">
+              <span className="block-label">📁 Output Files</span>
+              <span className="output-saved-badge">✅ Saved locally</span>
+            </div>
+
+            <div className="output-folder-tree">
+              <div className="folder-root">
+                <span className="folder-icon">📁</span>
+                <span className="folder-name">outputs / {blueprint.id} / {blueprint.product}</span>
+              </div>
+              {(['1x1', '9x16', '16x9'] as const).map((ratio) => {
+                const img = blueprint.images[ratio]
+                return (
+                  <div key={ratio} className="folder-file">
+                    <span className="file-icon">🖼</span>
+                    <span className="file-name">{ratio}.png</span>
+                    <span className="file-label">{img.format}</span>
+                    <span className="file-dims">{img.dimensions}</span>
+                    <a
+                      className="file-download"
+                      href={img.url}
+                      download={`${blueprint.product}_${ratio}.png`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      ↓
+                    </a>
+                  </div>
+                )
+              })}
+            </div>
+
+            {blueprint.generationReport && (
+              <div className="generation-report">
+                <h4>Generation Report</h4>
+                <div className="report-grid">
+                  <div className="report-item">
+                    <span className="report-label">Estimated Cost</span>
+                    <span className="report-value">${blueprint.generationReport.cost_usd.toFixed(2)}</span>
+                  </div>
+                  <div className="report-item">
+                    <span className="report-label">Image Calls</span>
+                    <span className="report-value">{blueprint.generationReport.nova_canvas_calls}</span>
+                  </div>
+                  <div className="report-item">
+                    <span className="report-label">Input Tokens</span>
+                    <span className="report-value">{blueprint.generationReport.token_counts.input.toLocaleString()}</span>
+                  </div>
+                  <div className="report-item">
+                    <span className="report-label">Output Tokens</span>
+                    <span className="report-value">{blueprint.generationReport.token_counts.output.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Block I: Approval Status */}
+          <BlueprintApprovalBlock blueprint={blueprint} onSubmit={submitApproval} />
+
         </div>
 
         {/* Journey Line */}

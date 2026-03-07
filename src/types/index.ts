@@ -1,5 +1,4 @@
 export type AspectRatio = '1x1' | '9x16' | '16x9'
-
 export type ComplianceStatus = 'pass' | 'warn' | 'fail'
 
 export interface ComplianceItem {
@@ -26,6 +25,21 @@ export interface NextStep {
   action: 'new-product' | 'new-region' | 'export' | 'legal' | 'regenerate'
 }
 
+// ── NEW ───────────────────────────────────────────────────────────────────────
+export type ApprovalStatus = 'pending_review' | 'approved' | 'rejected'
+
+export interface TokenCounts {
+  input: number
+  output: number
+}
+
+export interface GenerationReport {
+  cost_usd: number
+  token_counts: TokenCounts
+  nova_canvas_calls: number
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 export interface Blueprint {
   id: string
   product: string
@@ -38,6 +52,12 @@ export interface Blueprint {
   compliance: ComplianceItem[]
   nextSteps: NextStep[]
   createdAt: string
+  // ── NEW (all optional — existing blueprints stay valid) ───────────────────
+  approvalStatus?: ApprovalStatus
+  reviewedBy?: string
+  reviewerNotes?: string
+  reviewedAt?: string
+  generationReport?: GenerationReport
 }
 
 export interface Campaign {

@@ -1,4 +1,3 @@
-import { DOMAINS } from '../../data/mockData'
 import logo from '../../assets/logo.svg'
 import './TopNav.css'
 

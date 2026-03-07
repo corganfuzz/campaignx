@@ -16,12 +16,12 @@ export const useCampaign = () => {
     setBriefData(
       prefill
         ? {
-            products: ['Dove Shampoo', 'Dove Body Wash'],
-            region: 'brazil',
-            audience: 'Women 25-40',
-            message: prefill,
-            language: 'pt-BR',
-          }
+          products: ['Dove Shampoo', 'Dove Body Wash'],
+          region: 'brazil',
+          audience: 'Women 25-40',
+          message: prefill,
+          language: 'pt-BR',
+        }
         : null
     )
     setView('form')
@@ -35,7 +35,6 @@ export const useCampaign = () => {
     setView('loading')
 
     const newBlueprints: Blueprint[] = []
-
     for (let i = 0; i < data.products.length; i++) {
       const blueprint = await mockGenerateCampaign(i, (stepIndex) => {
         setPipelineSteps((prev) =>
@@ -46,14 +45,12 @@ export const useCampaign = () => {
         )
         setProgress(Math.round(((stepIndex + 1) / PIPELINE_STEPS.length) * 100))
       })
-
       // Override blueprint product name with user input
       newBlueprints.push({ ...blueprint, product: data.products[i], region: data.region })
     }
 
     setPipelineSteps((prev) => prev.map((s) => ({ ...s, status: 'done' as const })))
     setProgress(100)
-
     await new Promise((r) => setTimeout(r, 500))
     setBlueprints(newBlueprints)
     setView('canvas')
@@ -66,6 +63,36 @@ export const useCampaign = () => {
 
   const goHome = useCallback(() => setView('home'), [])
   const goToForm = useCallback(() => setView('form'), [])
+
+  // ── NEW ───────────────────────────────────────────────────────────────────
+  // To wire to the real API, replace the setBlueprints call below with:
+  //
+  //   await fetch(`${import.meta.env.VITE_API_BASE_URL}/campaigns/${blueprintId}/approval`, {
+  //     method: 'PATCH',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({ approval_status: status, reviewer_notes: notes }),
+  //   })
+  //
+  const submitApproval = useCallback(
+    async (blueprintId: string, status: 'approved' | 'rejected', notes?: string) => {
+      await new Promise((r) => setTimeout(r, 600)) // mock network delay
+      setBlueprints((prev) =>
+        prev.map((bp) =>
+          bp.id === blueprintId
+            ? {
+              ...bp,
+              approvalStatus: status,
+              reviewedBy: 'reviewer@company.com',
+              reviewerNotes: notes,
+              reviewedAt: new Date().toISOString(),
+            }
+            : bp
+        )
+      )
+    },
+    []
+  )
+  // ─────────────────────────────────────────────────────────────────────────
 
   return {
     view,
@@ -80,5 +107,6 @@ export const useCampaign = () => {
     openPastCampaign,
     goHome,
     goToForm,
+    submitApproval,
   }
 }

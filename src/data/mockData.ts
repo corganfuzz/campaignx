@@ -56,7 +56,15 @@ export const MOCK_BLUEPRINTS: Record<string, Blueprint> = {
       { id: 'ns4', label: 'Run full legal check', action: 'legal' },
     ],
     createdAt: '2025-04-02T10:30:00Z',
+    // ── NEW ──────────────────────────────────────────────────────────────────
+    approvalStatus: 'pending_review',
+    generationReport: {
+      cost_usd: 0.51,
+      token_counts: { input: 1842, output: 487 },
+      nova_canvas_calls: 3,
+    },
   },
+
   dove_bodywash_brazil: {
     id: 'bp_002',
     product: 'Dove Body Wash',
@@ -102,6 +110,16 @@ export const MOCK_BLUEPRINTS: Record<string, Blueprint> = {
       { id: 'ns4', label: 'Run full legal check', action: 'legal' },
     ],
     createdAt: '2025-04-02T10:35:00Z',
+    // ── NEW ──────────────────────────────────────────────────────────────────
+    approvalStatus: 'approved',
+    reviewedBy: 'jane@company.com',
+    reviewerNotes: 'Great work — approved for Brazil launch',
+    reviewedAt: '2025-04-02T12:00:00Z',
+    generationReport: {
+      cost_usd: 0.48,
+      token_counts: { input: 1720, output: 440 },
+      nova_canvas_calls: 3,
+    },
   },
 }
 
@@ -146,7 +164,6 @@ export const REGIONS = [
   { key: 'mexico', label: '🇲🇽 Mexico', lang: 'Spanish', langCode: 'es' },
   { key: 'france', label: '🇫🇷 France', lang: 'French', langCode: 'fr' },
 ]
-
 
 // Simulate an async API call that runs the pipeline
 export const mockGenerateCampaign = async (

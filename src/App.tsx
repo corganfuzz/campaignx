@@ -20,6 +20,7 @@ function App() {
     submitBrief,
     openPastCampaign,
     goHome,
+    submitApproval,
   } = useCampaign()
 
   const handleOpenCampaign = (campaign: Campaign) => {
@@ -71,6 +72,7 @@ function App() {
                 blueprints={blueprints}
                 onNewCampaign={() => startNewCampaign()}
                 onBack={goHome}
+                submitApproval={submitApproval}
               />
             )}
           </main>
