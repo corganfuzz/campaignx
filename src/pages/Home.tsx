@@ -70,14 +70,14 @@ export const Home = ({ onStartCampaign, onOpenCampaign }: HomeProps) => {
           </div>
         </div>
 
-        <div className="home-chips">
+        {/* <div className="home-chips">
           <button className="home-chip" onClick={() => onStartCampaign()}>
             📋 Fill brief manually
           </button>
           <button className="home-chip" onClick={() => setInputValue('Dove Shampoo in Brazil for women 25-40')}>
             ✦ Try an example
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Recent Campaigns */}

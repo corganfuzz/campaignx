@@ -5,6 +5,7 @@ import { Home } from './pages/Home'
 import { BriefForm } from './pages/BriefForm'
 import { LoadingPipeline } from './pages/LoadingPipeline'
 import { Canvas } from './pages/Canvas'
+import { ErrorScreen } from './pages/ErrorScreen'
 import { useCampaign } from './hooks/useCampaign'
 import type { Campaign } from './types'
 import './App.css'
@@ -16,6 +17,7 @@ function App() {
     blueprints,
     pipelineSteps,
     progress,
+    failureReason,
     startNewCampaign,
     submitBrief,
     openPastCampaign,
@@ -73,6 +75,14 @@ function App() {
                 onNewCampaign={() => startNewCampaign()}
                 onBack={goHome}
                 submitApproval={submitApproval}
+              />
+            )}
+
+            {view === 'error' && (
+              <ErrorScreen
+                failureReason={failureReason}
+                onRetry={() => (view === 'error' && briefData) ? submitBrief(briefData) : goHome()}
+                onHome={goHome}
               />
             )}
           </main>
