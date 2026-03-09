@@ -98,7 +98,6 @@ export const Home = ({
         }
       }
 
-      // Fallback: use text as message prefill in the Brief Form
       onStartCampaign(inputValue.trim())
     } else {
       onStartCampaign()
@@ -213,7 +212,6 @@ export const Home = ({
           </button>
 
           {isLoadingHistory ? (
-            // Skeleton loader
             [1, 2, 3].map((i) => (
               <div key={i} className="campaign-card skeleton">
                 <div className="campaign-card-thumb skeleton-box" />

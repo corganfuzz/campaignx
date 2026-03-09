@@ -33,7 +33,6 @@ function App() {
     if (campaign.blueprints.length > 0) {
       openPastCampaign(campaign.blueprints)
     } else {
-      // Re-generate if no blueprints saved
       startNewCampaign()
     }
   }

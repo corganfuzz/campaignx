@@ -6,11 +6,8 @@ export function parseBriefText(text: string): Partial<BriefFormData> {
     if (text.trim().startsWith('{')) {
         try {
             parsed = JSON.parse(text)
-        } catch {
-            // fallback
-        }
+        } catch { }
     } else {
-        // Slightly smarter YAML parser to handle lists (dashes)
         const lines = text.split('\n')
         let currentKey = ''
         const result: Record<string, any> = {}
@@ -20,7 +17,6 @@ export function parseBriefText(text: string): Partial<BriefFormData> {
             if (!trimmed || trimmed.startsWith('---')) return
 
             if (trimmed.startsWith('-')) {
-                // It's a list item
                 const listVal = trimmed.replace(/^-/, '').trim()
                 if (currentKey) {
                     if (!result[currentKey]) {
@@ -31,14 +27,13 @@ export function parseBriefText(text: string): Partial<BriefFormData> {
                     result[currentKey].push(listVal)
                 }
             } else if (trimmed.includes(':')) {
-                // It's a key: value pair
                 const [k, ...vParts] = trimmed.split(':')
                 currentKey = k.trim()
                 const val = vParts.join(':').trim()
                 if (val) {
                     result[currentKey] = val
                 } else {
-                    result[currentKey] = [] // prepare for list
+                    result[currentKey] = []
                 }
             }
         })

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import type { Blueprint, BriefFormData, PipelineStep, Campaign } from '../types'
-import { PIPELINE_STEPS } from '../data/mockData'
+import { PIPELINE_STEPS, MOCK_PAST_CAMPAIGNS, mockGenerateCampaign } from '../data/mockData'
 
 export type AppView = 'home' | 'form' | 'loading' | 'canvas' | 'error'
 
@@ -12,7 +12,6 @@ const apiHeaders = {
   'x-api-key': API_KEY,
 }
 
-// Map the raw DynamoDB / Lambda response shape → frontend Blueprint type
 function mapApiBlueprint(raw: Record<string, any>, campaignId: string): Blueprint {
   console.log('[CampaignX] Mapping blueprint:', raw.product_name, '| raw.images:', raw.images)
   const images = raw.images ?? {}
@@ -84,6 +83,15 @@ export const useCampaign = () => {
   const [failureReason, setFailureReason] = useState<string | null>(null)
 
   const fetchRecentCampaigns = useCallback(async () => {
+    if (import.meta.env.VITE_USE_MOCKS) {
+      setIsLoadingHistory(true)
+      setTimeout(() => {
+        setPastCampaigns(MOCK_PAST_CAMPAIGNS)
+        setIsLoadingHistory(false)
+      }, 500)
+      return
+    }
+
     if (!API_BASE || API_BASE === 'undefined') {
       console.warn('[CampaignX] API_BASE is not defined, skipping history fetch.')
       return
@@ -95,12 +103,8 @@ export const useCampaign = () => {
       const data = await res.json()
       console.log('[CampaignX] Raw /campaigns response:', data)
 
-      // The Lambda scan returns a FLAT array of DynamoDB items (one per product/blueprint),
-      // NOT a { campaigns: [] } wrapper. We group them by campaign_id to build one
-      // Campaign card per campaign.
       const rawItems: any[] = Array.isArray(data) ? data : (data.campaigns || data.Items || [])
 
-      // Group blueprint items by campaign_id
       const grouped: Record<string, any[]> = {}
       for (const item of rawItems) {
         const cid = item.campaign_id
@@ -109,13 +113,11 @@ export const useCampaign = () => {
         grouped[cid].push(item)
       }
 
-      // Convert each campaign group into a Campaign object
       const campaigns: Campaign[] = Object.entries(grouped)
         .map(([cid, items]) => {
           const first = items[0]
           return {
             id: cid,
-            // products field may be a list stored on the first blueprint
             product: (first.products as string[] | undefined)?.join(', ') || first.product_name || 'Campaign',
             region: first.region || '',
             audience: first.audience || '',
@@ -125,7 +127,6 @@ export const useCampaign = () => {
             blueprints: items.map((bp) => mapApiBlueprint(bp, cid)),
           }
         })
-        // Sort newest first
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
       console.log('[CampaignX] Parsed campaigns:', campaigns.length)
@@ -162,7 +163,30 @@ export const useCampaign = () => {
     setView('loading')
 
     try {
-      // ── Step 1: Submit the brief → API Gateway → SQS → Lambda → Bedrock
+      if (import.meta.env.VITE_USE_MOCKS) {
+        const newBlueprints: Blueprint[] = []
+        for (let b = 0; b < data.products.length; b++) {
+          const bp = await mockGenerateCampaign(b, (stepIndex) => {
+            setPipelineSteps((prev) =>
+              prev.map((s, idx) => ({
+                ...s,
+                status: idx < stepIndex ? 'done' : idx === stepIndex ? 'running' : 'pending',
+              }))
+            )
+            setProgress(Math.round(((stepIndex + 1) / PIPELINE_STEPS.length) * 90))
+          })
+          newBlueprints.push({ ...bp, product: data.products[b] })
+        }
+
+        setPipelineSteps((prev) => prev.map((s) => ({ ...s, status: 'done' as const })))
+        setProgress(100)
+        await new Promise((r) => setTimeout(r, 500))
+
+        setBlueprints(newBlueprints)
+        setView('canvas')
+        return
+      }
+
       const submitRes = await fetch(`${API_BASE}/brief`, {
         method: 'POST',
         headers: apiHeaders,
@@ -182,10 +206,8 @@ export const useCampaign = () => {
 
       const { campaignId } = await submitRes.json()
 
-      // ── Step 2: Animate pipeline steps while Bedrock is generating
       const totalSteps = PIPELINE_STEPS.length
       for (let i = 0; i < totalSteps; i++) {
-        // Spread animations across the expected ~30s generation window
         await new Promise((r) => setTimeout(r, (25000 / totalSteps) * (0.8 + Math.random() * 0.4)))
         setPipelineSteps((prev) =>
           prev.map((s, idx) => ({
@@ -196,7 +218,6 @@ export const useCampaign = () => {
         setProgress(Math.round(((i + 1) / totalSteps) * 90))
       }
 
-      // ── Step 3: Poll DynamoDB via GET /campaigns/{id} until blueprints appear
       const newBlueprints = await pollCampaign(campaignId)
 
       setPipelineSteps((prev) => prev.map((s) => ({ ...s, status: 'done' as const })))
@@ -207,7 +228,6 @@ export const useCampaign = () => {
       setView('canvas')
     } catch (err: any) {
       setFailureReason(err.message || 'An unexpected error occurred.')
-      // No longer switching to 'error' view, the dialog will show over the current view
     }
   }, [])
 
@@ -222,8 +242,24 @@ export const useCampaign = () => {
   }, [])
   const submitApproval = useCallback(
     async (blueprintId: string, status: 'approved' | 'rejected', notes?: string) => {
-      // ... same logic
       try {
+        if (import.meta.env.VITE_USE_MOCKS) {
+          setBlueprints((prev) =>
+            prev.map((bp) =>
+              bp.id === blueprintId
+                ? {
+                  ...bp,
+                  approvalStatus: status,
+                  reviewedBy: 'reviewer@company.com',
+                  reviewerNotes: notes,
+                  reviewedAt: new Date().toISOString(),
+                }
+                : bp
+            )
+          )
+          return
+        }
+
         const [campaignId, ...productParts] = blueprintId.split('#')
         const productName = productParts.join('#')
 

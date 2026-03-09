@@ -27,7 +27,6 @@ export interface NextStep {
   action: 'new-product' | 'new-region' | 'export' | 'legal' | 'regenerate'
 }
 
-// ── NEW ───────────────────────────────────────────────────────────────────────
 export type ApprovalStatus = 'pending_review' | 'approved' | 'rejected'
 
 export interface TokenCounts {
@@ -40,7 +39,6 @@ export interface GenerationReport {
   token_counts: TokenCounts
   nova_canvas_calls: number
 }
-// ─────────────────────────────────────────────────────────────────────────────
 
 export interface Blueprint {
   id: string
@@ -54,7 +52,6 @@ export interface Blueprint {
   compliance: ComplianceItem[]
   nextSteps: NextStep[]
   createdAt: string
-  // ── NEW (all optional — existing blueprints stay valid) ───────────────────
   approvalStatus?: ApprovalStatus
   reviewedBy?: string
   reviewerNotes?: string
