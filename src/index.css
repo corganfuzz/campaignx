@@ -29,3 +29,12 @@ body,
   color: var(--text-primary);
   min-height: 100vh;
 }
+/* Fix for Spectrum Workflow icons missing stylesheet */
+[class*="spectrum-Icon"] {
+  flex-shrink: 0;
+}
+[class*="spectrum-Icon--sizeXXS"] { width: 9px !important; height: 9px !important; }
+[class*="spectrum-Icon--sizeXS"] { width: 14px !important; height: 14px !important; }
+[class*="spectrum-Icon--sizeS"] { width: 18px !important; height: 18px !important; }
+[class*="spectrum-Icon--sizeM"] { width: 24px !important; height: 24px !important; }
+[class*="spectrum-Icon--sizeL"] { width: 32px !important; height: 32px !important; }

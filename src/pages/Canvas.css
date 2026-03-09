@@ -298,6 +298,26 @@
   padding: 2px 7px;
 }
 
+.image-card-gen-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+}
+
+.image-card-gen-badge.ai {
+  background: rgba(13, 153, 255, 0.85);
+  color: #fff;
+}
+
+.image-card-gen-badge.ref {
+  background: rgba(0, 0, 0, 0.65);
+  color: #aaa;
+}
+
 .image-card-body {
   padding: 12px;
 }
@@ -666,6 +686,8 @@
 }
 
 .file-download {
+  background: none;
+  cursor: pointer;
   color: rgba(255, 255, 255, 0.4);
   text-decoration: none;
   padding: 2px 8px;

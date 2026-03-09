@@ -13,9 +13,11 @@ export interface CampaignImage {
   ratio: AspectRatio
 }
 
+import type { ReactNode } from 'react'
+
 export interface AdCopy {
   lang: string
-  flag: string
+  flag: string | ReactNode
   text: string
 }
 

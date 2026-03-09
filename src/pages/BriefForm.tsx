@@ -3,6 +3,15 @@ import { REGIONS } from '../data/mockData'
 import type { BriefFormData } from '../types'
 import './BriefForm.css'
 
+import ArrowLeft from '@spectrum-icons/workflow/ArrowLeft'
+import PasteList from '@spectrum-icons/workflow/PasteList'
+import Cancel from '@spectrum-icons/workflow/Cancel'
+import CheckmarkCircle from '@spectrum-icons/workflow/CheckmarkCircle'
+import Document from '@spectrum-icons/workflow/Document'
+import Add from '@spectrum-icons/workflow/Add'
+import Attach from '@spectrum-icons/workflow/Attach'
+import Send from '@spectrum-icons/workflow/Send'
+
 interface BriefFormProps {
   prefill: BriefFormData | null
   onSubmit: (data: BriefFormData) => void
@@ -78,9 +87,13 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
       <div className="form-container">
         <div className="form-header">
           <button className="form-back" onClick={onBack}>
-            ← Back
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <ArrowLeft size="XS" /> Back
+            </span>
           </button>
-          <h2 className="form-title">📋 Campaign Brief</h2>
+          <h2 className="form-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <PasteList size="M" /> Campaign Brief
+          </h2>
           <p className="form-sub">Fill in the details below to generate your campaign assets</p>
         </div>
 
@@ -99,14 +112,14 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
                   onChange={(e) => updateProduct(i, e.target.value)}
                 />
                 {products.length > 2 && (
-                  <button className="form-remove-btn" onClick={() => removeProduct(i)}>
-                    ✕
+                  <button className="form-remove-btn" onClick={() => removeProduct(i)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Cancel size="XS" />
                   </button>
                 )}
               </div>
             ))}
-            <button className="form-add-btn" onClick={addProduct}>
-              + Add product
+            <button className="form-add-btn" onClick={addProduct} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Add size="XS" /> Add product
             </button>
           </div>
         </div>
@@ -179,13 +192,13 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
             />
             {briefFile ? (
               <>
-                <div className="form-dropzone-icon">✅</div>
+                <div className="form-dropzone-icon"><CheckmarkCircle size="M" color="positive" /></div>
                 <div className="form-dropzone-text">{briefFile.name}</div>
                 <div className="form-dropzone-sub">Brief loaded — form fields pre-filled</div>
               </>
             ) : (
               <>
-                <div className="form-dropzone-icon">📄</div>
+                <div className="form-dropzone-icon"><Document size="M" /></div>
                 <div className="form-dropzone-text">Upload brief.json or brief.yaml</div>
                 <div className="form-dropzone-sub">Auto-fills all fields below</div>
               </>
@@ -199,7 +212,7 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
             Existing Brand Assets <span className="form-optional">optional</span>
           </label>
           <div className="form-dropzone">
-            <div className="form-dropzone-icon">📎</div>
+            <div className="form-dropzone-icon"><Attach size="M" /></div>
             <div className="form-dropzone-text">Drop images here or click to upload</div>
             <div className="form-dropzone-sub">If skipped, AI will generate all images</div>
           </div>
@@ -210,8 +223,9 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
           className={`form-submit ${canSubmit ? '' : 'disabled'}`}
           onClick={handleSubmit}
           disabled={!canSubmit}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
         >
-          🚀 Generate Campaign Assets
+          <Send size="XS" /> Generate Campaign Assets
         </button>
 
         {!canSubmit && (

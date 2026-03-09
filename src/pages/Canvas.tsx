@@ -5,6 +5,23 @@ import { ImageDetail } from '../components/shared/ImageDetail'
 import { BlueprintApprovalBlock } from './BlueprintApprovalBlock'
 import './Canvas.css'
 
+import CheckmarkCircle from '@spectrum-icons/workflow/CheckmarkCircle'
+import Alert from '@spectrum-icons/workflow/Alert'
+import Cancel from '@spectrum-icons/workflow/Cancel'
+import Download from '@spectrum-icons/workflow/Download'
+import Box from '@spectrum-icons/workflow/Box'
+import MagicWand from '@spectrum-icons/workflow/MagicWand'
+import Image from '@spectrum-icons/workflow/Image'
+import Edit from '@spectrum-icons/workflow/Edit'
+import Chat from '@spectrum-icons/workflow/Chat'
+import Shield from '@spectrum-icons/workflow/Shield'
+import ArrowRight from '@spectrum-icons/workflow/ArrowRight'
+import ArrowLeft from '@spectrum-icons/workflow/ArrowLeft'
+import Folder from '@spectrum-icons/workflow/Folder'
+import Camera from '@spectrum-icons/workflow/Camera'
+import Globe from '@spectrum-icons/workflow/Globe'
+import { downloadImageFromUrl } from '../utils/download'
+
 interface CanvasProps {
   blueprints: Blueprint[]
   onNewCampaign: () => void
@@ -21,9 +38,9 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
   if (!blueprint) return null
 
   const statusIcon = (s: string) => {
-    if (s === 'pass') return '✅'
-    if (s === 'warn') return '⚠️'
-    return '❌'
+    if (s === 'pass') return <CheckmarkCircle size="XS" color="positive" />
+    if (s === 'warn') return <Alert size="XS" color="notice" />
+    return <Cancel size="XS" color="negative" />
   }
 
   const ratioLabels: Record<string, string> = {
@@ -37,7 +54,11 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
       {/* Canvas Header */}
       <div className="canvas-header">
         <div className="canvas-header-left">
-          <button className="canvas-back" onClick={onBack}>← Back</button>
+          <button className="canvas-back" onClick={onBack}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <ArrowLeft size="XS" /> Back
+            </span>
+          </button>
           <div className="canvas-title-wrap">
             <span className="canvas-status-dot" />
             <h2 className="canvas-title">Campaign Ready</h2>
@@ -46,7 +67,9 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
         </div>
         <div className="canvas-header-right">
           <button className="canvas-export-btn" onClick={() => alert('Exporting all assets…')}>
-            ↓ Export All
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Download size="XS" /> Export All
+            </span>
           </button>
           <button className="canvas-new-btn" onClick={onNewCampaign}>
             + New Campaign
@@ -63,7 +86,9 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
               className={`canvas-tab ${activeTab === i ? 'active' : ''}`}
               onClick={() => setActiveTab(i)}
             >
-              📦 {bp.product}
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Box size="XS" /> {bp.product}
+              </span>
             </button>
           ))}
         </div>
@@ -76,9 +101,13 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
           {/* Block A: Creative Strategy */}
           <div className="block block-strategy">
             <div className="block-header">
-              <span className="block-label">✦ Creative Strategy</span>
+              <span className="block-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <MagicWand size="XS" /> Creative Strategy
+              </span>
               <button className="ai-cursor-btn" onClick={() => setAiCursorBlock('strategy')}>
-                ✏️ AI ✦
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Edit size="XS" /> AI <MagicWand size="XS" />
+                </span>
               </button>
             </div>
             <p className="block-strategy-text">{blueprint.strategy}</p>
@@ -90,7 +119,9 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
           {/* Block B/C/D: Images */}
           <div className="block block-images-wrap">
             <div className="block-header">
-              <span className="block-label">🖼 Generated Assets — 3 Formats</span>
+              <span className="block-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Image size="XS" /> Generated Assets — 3 Formats
+              </span>
             </div>
             <div className="block-images-grid">
               {(Object.entries(blueprint.images) as [string, typeof blueprint.images[keyof typeof blueprint.images]][]).map(([ratio, img]) => (
@@ -99,11 +130,20 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
                     className="image-card-thumb"
                     onClick={() => setSelectedImage({ blueprint, ratio })}
                   >
-                    <img src={img.url} alt={img.format} />
+                    <img src={img.url} alt={img.format} crossOrigin="anonymous" />
                     <div className="image-card-overlay">
-                      <span>View Full Size →</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        View Full Size <ArrowRight size="XS" />
+                      </span>
                     </div>
                     <div className="image-card-ratio">{ratio.replace('x', ':')}</div>
+                    {(img as any).generated !== undefined && (
+                      <div className={`image-card-gen-badge ${(img as any).generated ? 'ai' : 'ref'}`}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          {(img as any).generated ? <><MagicWand size="XS" /> AI Generated</> : <><Camera size="XS" /> Reference</>}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div className="image-card-body">
                     <div className="image-card-format">{ratioLabels[ratio]}</div>
@@ -113,13 +153,17 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
                         className="image-action-btn"
                         onClick={() => setAiCursorBlock(`image-${ratio}`)}
                       >
-                        ✏️ AI ✦
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                          <Edit size="XS" /> AI <MagicWand size="XS" />
+                        </span>
                       </button>
                       <button
                         className="image-action-btn"
-                        onClick={() => alert(`Downloading ${ratio}...`)}
+                        onClick={() => downloadImageFromUrl(img.url, `${blueprint.product}_${ratio}.png`)}
                       >
-                        ↓ Save
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                          <Download size="XS" /> Save
+                        </span>
                       </button>
                     </div>
                   </div>
@@ -136,15 +180,21 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
             {/* Block E: Ad Copy */}
             <div className="block block-copy">
               <div className="block-header">
-                <span className="block-label">💬 Ad Copy</span>
+                <span className="block-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Chat size="XS" /> Ad Copy
+                </span>
                 <button className="ai-cursor-btn" onClick={() => setAiCursorBlock('copy')}>
-                  ✏️ AI ✦
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Edit size="XS" /> AI <MagicWand size="XS" />
+                  </span>
                 </button>
               </div>
               <div className="copy-list">
                 {blueprint.adCopy.map((c, i) => (
                   <div key={i} className="copy-row">
-                    <span className="copy-flag">{c.flag}</span>
+                    <span className="copy-flag">
+                      {c.flag === 'Global' ? <Globe size="XS" /> : c.flag}
+                    </span>
                     <div>
                       <div className="copy-lang">{c.lang}</div>
                       <div className="copy-text">"{c.text}"</div>
@@ -160,9 +210,13 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
             {/* Block F: Compliance */}
             <div className="block block-compliance">
               <div className="block-header">
-                <span className="block-label">🛡 Compliance Check</span>
+                <span className="block-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Shield size="XS" /> Compliance Check
+                </span>
                 <button className="ai-cursor-btn" onClick={() => setAiCursorBlock('compliance')}>
-                  ✏️ AI ✦
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Edit size="XS" /> AI <MagicWand size="XS" />
+                  </span>
                 </button>
               </div>
               <div className="compliance-list">
@@ -182,7 +236,9 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
           {/* Block G: Next Steps */}
           <div className="block block-next-steps">
             <div className="block-header">
-              <span className="block-label">→ Suggested Next Steps</span>
+              <span className="block-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <ArrowRight size="XS" /> Suggested Next Steps
+              </span>
             </div>
             <div className="next-steps-grid">
               {blueprint.nextSteps.map((step) => (
@@ -204,32 +260,37 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
           {/* Block H: Output Files + Generation Report */}
           <div className="block block-output">
             <div className="block-header">
-              <span className="block-label">📁 Output Files</span>
-              <span className="output-saved-badge">✅ Saved locally</span>
+              <span className="block-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Folder size="XS" /> Output Files
+              </span>
+              <span className="output-saved-badge" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <CheckmarkCircle size="XS" /> Saved locally
+              </span>
             </div>
 
             <div className="output-folder-tree">
               <div className="folder-root">
-                <span className="folder-icon">📁</span>
+                <span className="folder-icon"><Folder size="XS" /></span>
                 <span className="folder-name">outputs / {blueprint.id} / {blueprint.product}</span>
               </div>
               {(['1x1', '9x16', '16x9'] as const).map((ratio) => {
                 const img = blueprint.images[ratio]
                 return (
                   <div key={ratio} className="folder-file">
-                    <span className="file-icon">🖼</span>
+                    <span className="file-icon"><Image size="XS" /></span>
                     <span className="file-name">{ratio}.png</span>
                     <span className="file-label">{img.format}</span>
                     <span className="file-dims">{img.dimensions}</span>
-                    <a
+                    <button
                       className="file-download"
-                      href={img.url}
-                      download={`${blueprint.product}_${ratio}.png`}
-                      target="_blank"
-                      rel="noreferrer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        downloadImageFromUrl(img.url, `${blueprint.product}_${ratio}.png`);
+                      }}
+                      title="Download image"
                     >
-                      ↓
-                    </a>
+                      <Download size="XS" />
+                    </button>
                   </div>
                 )
               })}
@@ -267,10 +328,13 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
 
         {/* Journey Line */}
         <div className="journey-line">
-          {['Brief Input', 'Brand RAG', 'Creative Strategy', 'Image Gen', 'Resize + Overlay', 'Done ✓'].map((step, i, arr) => (
+          {['Brief Input', 'Brand RAG', 'Creative Strategy', 'Image Gen', 'Resize + Overlay', 'Done'].map((step, i, arr) => (
             <div key={i} className="journey-step">
-              <span className="journey-label">{step}</span>
-              {i < arr.length - 1 && <span className="journey-arrow">→</span>}
+              <span className="journey-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {step}
+                {i === arr.length - 1 && <CheckmarkCircle size="S" color="positive" />}
+              </span>
+              {i < arr.length - 1 && <span className="journey-arrow"><ArrowRight size="S" /></span>}
             </div>
           ))}
         </div>

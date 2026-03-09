@@ -1,6 +1,10 @@
 import type { Blueprint } from '../../types'
 import './ImageDetail.css'
 
+import Refresh from '@spectrum-icons/workflow/Refresh'
+import Download from '@spectrum-icons/workflow/Download'
+import { downloadImageFromUrl } from '../../utils/download'
+
 interface ImageDetailProps {
   blueprint: Blueprint
   ratio: string
@@ -30,7 +34,7 @@ export const ImageDetail = ({ blueprint, ratio, onClose, onRegenerate }: ImageDe
         </div>
 
         <div className="image-detail-img-wrap">
-          <img src={img.url} alt={img.format} />
+          <img src={img.url} alt={img.format} crossOrigin="anonymous" />
           <div className="image-detail-overlay-text">
             "{blueprint.message}"
           </div>
@@ -56,11 +60,11 @@ export const ImageDetail = ({ blueprint, ratio, onClose, onRegenerate }: ImageDe
         </div>
 
         <div className="image-detail-actions">
-          <button className="image-detail-btn regen" onClick={onRegenerate}>
-            🔄 Regenerate This Format
+          <button className="image-detail-btn regen" onClick={onRegenerate} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Refresh size="XS" /> Regenerate This Format
           </button>
-          <button className="image-detail-btn download" onClick={() => alert('Downloading...')}>
-            ↓ Download
+          <button className="image-detail-btn download" onClick={() => downloadImageFromUrl(img.url, `${blueprint.product}_${ratio}.png`)} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Download size="XS" /> Download
           </button>
         </div>
       </div>

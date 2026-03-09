@@ -3,6 +3,11 @@ import { MOCK_PAST_CAMPAIGNS } from '../data/mockData'
 import type { Campaign } from '../types'
 import './Home.css'
 
+import MagicWand from '@spectrum-icons/workflow/MagicWand'
+import Settings from '@spectrum-icons/workflow/Settings'
+import ArrowRight from '@spectrum-icons/workflow/ArrowRight'
+import Box from '@spectrum-icons/workflow/Box'
+
 interface HomeProps {
   onStartCampaign: (prefill?: string) => void
   onOpenCampaign: (campaign: Campaign) => void
@@ -32,7 +37,11 @@ export const Home = ({ onStartCampaign, onOpenCampaign }: HomeProps) => {
       <div className="home-background-gradient" />
       {/* Hero Input */}
       <div className="home-hero">
-        <div className="home-hero-badge">✦ AI Creative Studio</div>
+        <div className="home-hero-badge">
+          <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <MagicWand size="XS" /> AI Creative Studio
+          </span>
+        </div>
         <h1 className="home-hero-title">What campaign are we building today?</h1>
         <p className="home-hero-sub">
           Describe your product and market — the AI will generate brand-aligned creative assets
@@ -54,11 +63,11 @@ export const Home = ({ onStartCampaign, onOpenCampaign }: HomeProps) => {
               <button className="control-btn pilled">
                 Image
               </button>
-              <button className="control-btn pilled">
-                <span className="btn-icon">🤖</span> Gemini 2.0 Flash
+              <button className="control-btn pilled" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span className="btn-icon"><MagicWand size="XS" /></span> Gemini 2.0 Flash
               </button>
-              <button className="control-btn more">
-                <span className="btn-icon">⚙️</span> More
+              <button className="control-btn more" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span className="btn-icon"><Settings size="XS" /></span> More
               </button>
             </div>
             <button className="home-generate-btn" onClick={handleSubmit}>
@@ -72,10 +81,10 @@ export const Home = ({ onStartCampaign, onOpenCampaign }: HomeProps) => {
 
         {/* <div className="home-chips">
           <button className="home-chip" onClick={() => onStartCampaign()}>
-            📋 Fill brief manually
+            <PasteList size="XS" /> Fill brief manually
           </button>
           <button className="home-chip" onClick={() => setInputValue('Dove Shampoo in Brazil for women 25-40')}>
-            ✦ Try an example
+            <MagicWand size="XS" /> Try an example
           </button>
         </div> */}
       </div>
@@ -100,11 +109,15 @@ export const Home = ({ onStartCampaign, onOpenCampaign }: HomeProps) => {
                   alt={campaign.product}
                 />
                 <div className="campaign-card-overlay">
-                  <span>Open Canvas →</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    Open Canvas <ArrowRight size="XS" />
+                  </span>
                 </div>
               </div>
               <div className="campaign-card-body">
-                <div className="campaign-card-product">📦 {campaign.product}</div>
+                <div className="campaign-card-product" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Box size="XS" /> {campaign.product}
+                </div>
                 <div className="campaign-card-meta">
                   <span className="campaign-card-region">{campaign.region}</span>
                   <span className="campaign-card-dot">·</span>

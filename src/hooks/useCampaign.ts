@@ -14,6 +14,7 @@ const apiHeaders = {
 
 // Map the raw DynamoDB / Lambda response shape → frontend Blueprint type
 function mapApiBlueprint(raw: Record<string, any>, campaignId: string): Blueprint {
+  console.log('[CampaignX] Mapping blueprint:', raw.product_name, '| raw.images:', raw.images)
   const images = raw.images ?? {}
   return {
     id: `${campaignId}#${raw.product_name}`,
@@ -29,7 +30,7 @@ function mapApiBlueprint(raw: Record<string, any>, campaignId: string): Blueprin
     },
     adCopy: (raw.adCopy ?? []).map((c: any) => ({
       lang: c.lang ?? 'English',
-      flag: '🌐',
+      flag: 'Global',
       text: (c.text ?? '').trim(),
     })),
     compliance: [],
@@ -57,10 +58,14 @@ async function pollCampaign(campaignId: string): Promise<Blueprint[]> {
     if (!res.ok) continue
 
     const data = await res.json()
+    console.log(`[CampaignX] Poll attempt ${attempt + 1} response:`, data)
     const items: any[] = data.blueprints ?? []
 
     if (items.length > 0) {
-      return items.map((raw) => mapApiBlueprint(raw, campaignId))
+      console.log('[CampaignX] Raw blueprints from API:', JSON.stringify(items, null, 2))
+      const mapped = items.map((raw) => mapApiBlueprint(raw, campaignId))
+      console.log('[CampaignX] Mapped blueprints (images):', mapped.map(b => ({ product: b.product, images: b.images })))
+      return mapped
     }
   }
 
@@ -166,7 +171,7 @@ export const useCampaign = () => {
         const [campaignId, ...productParts] = blueprintId.split('#')
         const productName = productParts.join('#')
 
-        await fetch(`${API_BASE}/campaigns/${campaignId}/approval`, {
+        const response = await fetch(`${API_BASE}/campaigns/${campaignId}/approval`, {
           method: 'PATCH',
           headers: apiHeaders,
           body: JSON.stringify({
@@ -175,6 +180,9 @@ export const useCampaign = () => {
             reviewer_notes: notes ?? '',
           }),
         })
+
+        const data = await response.json()
+        console.log(`[CampaignX] Approval submitted for ${productName} (${status}):`, data)
 
         setBlueprints((prev) =>
           prev.map((bp) =>

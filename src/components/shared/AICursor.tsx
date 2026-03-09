@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import './AICursor.css'
 
+import MagicWand from '@spectrum-icons/workflow/MagicWand'
+import Clock from '@spectrum-icons/workflow/Clock'
+import ArrowRight from '@spectrum-icons/workflow/ArrowRight'
+import Checkmark from '@spectrum-icons/workflow/Checkmark'
+import Refresh from '@spectrum-icons/workflow/Refresh'
+
 interface AICursorProps {
   blockId: string
   onClose: () => void
@@ -30,7 +36,9 @@ export const AICursor = ({ blockId, onClose }: AICursorProps) => {
   return (
     <div className="ai-cursor-popover">
       <div className="ai-cursor-header">
-        <span className="ai-cursor-title">✦ AI Cursor</span>
+        <span className="ai-cursor-title" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <MagicWand size="XS" /> AI Cursor
+        </span>
         <button className="ai-cursor-close" onClick={onClose}>✕</button>
       </div>
 
@@ -50,8 +58,9 @@ export const AICursor = ({ blockId, onClose }: AICursorProps) => {
               className="ai-cursor-send"
               onClick={handleSend}
               disabled={loading || !input.trim()}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              {loading ? '⏳' : '→'}
+              {loading ? <Clock size="XS" /> : <ArrowRight size="XS" />}
             </button>
           </div>
           {loading && (
@@ -64,15 +73,17 @@ export const AICursor = ({ blockId, onClose }: AICursorProps) => {
       ) : (
         <>
           <div className="ai-cursor-response">
-            <span className="ai-response-icon">🤖</span>
+            <span className="ai-response-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <MagicWand size="S" />
+            </span>
             <p>{response}</p>
           </div>
           <div className="ai-cursor-actions">
-            <button className="ai-cursor-action-btn accept" onClick={onClose}>
-              ✓ Apply changes
+            <button className="ai-cursor-action-btn accept" onClick={onClose} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Checkmark size="XS" /> Apply changes
             </button>
-            <button className="ai-cursor-action-btn reject" onClick={() => setResponse(null)}>
-              ↺ Try again
+            <button className="ai-cursor-action-btn reject" onClick={() => setResponse(null)} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Refresh size="XS" /> Try again
             </button>
           </div>
         </>
