@@ -89,6 +89,7 @@ export const useCampaign = () => {
         : null
     )
     setView('form')
+    setFailureReason(null)
   }, [])
 
   const submitBrief = useCallback(async (data: BriefFormData) => {
@@ -144,8 +145,8 @@ export const useCampaign = () => {
       setBlueprints(newBlueprints)
       setView('canvas')
     } catch (err: any) {
-      setFailureReason(err.message || 'An unexpected error occurred during generation.')
-      setView('error')
+      setFailureReason(err.message || 'An unexpected error occurred.')
+      // No longer switching to 'error' view, the dialog will show over the current view
     }
   }, [])
 
@@ -154,42 +155,49 @@ export const useCampaign = () => {
     setView('canvas')
   }, [])
 
-  const goHome = useCallback(() => setView('home'), [])
-  const goToForm = useCallback(() => setView('form'), [])
-
+  const goHome = useCallback(() => {
+    setView('home')
+    setFailureReason(null)
+  }, [])
   const submitApproval = useCallback(
     async (blueprintId: string, status: 'approved' | 'rejected', notes?: string) => {
-      // blueprintId format: `{campaignId}#{productName}`
-      const [campaignId, ...productParts] = blueprintId.split('#')
-      const productName = productParts.join('#')
+      // ... same logic
+      try {
+        const [campaignId, ...productParts] = blueprintId.split('#')
+        const productName = productParts.join('#')
 
-      await fetch(`${API_BASE}/campaigns/${campaignId}/approval`, {
-        method: 'PATCH',
-        headers: apiHeaders,
-        body: JSON.stringify({
-          product_name: productName,
-          approval_status: status,
-          reviewer_notes: notes ?? '',
-        }),
-      })
+        await fetch(`${API_BASE}/campaigns/${campaignId}/approval`, {
+          method: 'PATCH',
+          headers: apiHeaders,
+          body: JSON.stringify({
+            product_name: productName,
+            approval_status: status,
+            reviewer_notes: notes ?? '',
+          }),
+        })
 
-      // Optimistically update local state immediately
-      setBlueprints((prev) =>
-        prev.map((bp) =>
-          bp.id === blueprintId
-            ? {
-              ...bp,
-              approvalStatus: status,
-              reviewedBy: 'reviewer@company.com',
-              reviewerNotes: notes,
-              reviewedAt: new Date().toISOString(),
-            }
-            : bp
+        setBlueprints((prev) =>
+          prev.map((bp) =>
+            bp.id === blueprintId
+              ? {
+                ...bp,
+                approvalStatus: status,
+                reviewedBy: 'reviewer@company.com',
+                reviewerNotes: notes,
+                reviewedAt: new Date().toISOString(),
+              }
+              : bp
+          )
         )
-      )
+      } catch (err: any) {
+        setFailureReason(`Approval failed: ${err.message}`)
+      }
     },
     []
   )
+
+  const clearError = useCallback(() => setFailureReason(null), [])
+  const goToForm = useCallback(() => setView('form'), [])
 
   return {
     view,
@@ -200,6 +208,7 @@ export const useCampaign = () => {
     selectedImageDetail,
     failureReason,
     setSelectedImageDetail,
+    clearError,
     setFailureReason,
     startNewCampaign,
     submitBrief,

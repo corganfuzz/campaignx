@@ -5,7 +5,7 @@ import { Home } from './pages/Home'
 import { BriefForm } from './pages/BriefForm'
 import { LoadingPipeline } from './pages/LoadingPipeline'
 import { Canvas } from './pages/Canvas'
-import { ErrorScreen } from './pages/ErrorScreen'
+import { ErrorDialog } from './components/shared/ErrorDialog'
 import { useCampaign } from './hooks/useCampaign'
 import type { Campaign } from './types'
 import './App.css'
@@ -18,6 +18,7 @@ function App() {
     pipelineSteps,
     progress,
     failureReason,
+    clearError,
     startNewCampaign,
     submitBrief,
     openPastCampaign,
@@ -77,16 +78,21 @@ function App() {
                 submitApproval={submitApproval}
               />
             )}
-
-            {view === 'error' && (
-              <ErrorScreen
-                failureReason={failureReason}
-                onRetry={() => (view === 'error' && briefData) ? submitBrief(briefData) : goHome()}
-                onHome={goHome}
-              />
-            )}
           </main>
         </div>
+
+        <ErrorDialog
+          isOpen={!!failureReason}
+          message={failureReason}
+          onClose={clearError}
+          onRetry={() => {
+            if (briefData) {
+              submitBrief(briefData);
+            } else {
+              clearError();
+            }
+          }}
+        />
       </div>
     </Provider>
   )
