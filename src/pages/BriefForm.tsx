@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { REGIONS } from '../data/mockData'
 import type { BriefFormData } from '../types'
+import { parseBriefText } from '../utils/yamlParser'
 import './BriefForm.css'
 
 import ArrowLeft from '@spectrum-icons/workflow/ArrowLeft'
-import PasteList from '@spectrum-icons/workflow/PasteList'
 import Cancel from '@spectrum-icons/workflow/Cancel'
 import CheckmarkCircle from '@spectrum-icons/workflow/CheckmarkCircle'
 import Document from '@spectrum-icons/workflow/Document'
@@ -25,27 +25,22 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
   const [message, setMessage] = useState(prefill?.message ?? '')
   const [language, setLanguage] = useState(prefill?.language ?? 'pt-BR')
   const [briefFile, setBriefFile] = useState<File | null>(null)
+  const [isDraggingBrief, setIsDraggingBrief] = useState(false)
+  const [isDraggingAssets, setIsDraggingAssets] = useState(false)
 
-  const handleBriefFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+  const handleBriefFileUpload = async (e: React.ChangeEvent<HTMLInputElement> | React.DragEvent) => {
+    let file: File | undefined
+    if ('files' in e.target && e.target.files) {
+      file = e.target.files[0]
+    } else if ('dataTransfer' in e) {
+      file = e.dataTransfer.files[0]
+    }
+
     if (!file) return
     setBriefFile(file)
     const text = await file.text()
     try {
-      let parsed: Partial<BriefFormData> = {}
-      if (file.name.endsWith('.json')) {
-        parsed = JSON.parse(text)
-      } else {
-        // Basic YAML key: value parser (no library needed for simple flat YAML)
-        parsed = Object.fromEntries(
-          text.split('\n')
-            .filter(l => l.includes(':'))
-            .map(l => {
-              const [k, ...v] = l.split(':')
-              return [k.trim(), v.join(':').trim()]
-            })
-        ) as Partial<BriefFormData>
-      }
+      const parsed = parseBriefText(text)
       if (parsed.products) setProducts(Array.isArray(parsed.products) ? parsed.products : [parsed.products as unknown as string])
       if (parsed.region) setRegion(parsed.region)
       if (parsed.audience) setAudience(parsed.audience)
@@ -54,6 +49,22 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
     } catch {
       alert('Could not parse file. Please check the format.')
     }
+  }
+
+  const handleDragOver = (e: React.DragEvent, setDragging: (val: boolean) => void) => {
+    e.preventDefault()
+    setDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent, setDragging: (val: boolean) => void) => {
+    e.preventDefault()
+    setDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent, setDragging: (val: boolean) => void, handler: (e: React.DragEvent) => void) => {
+    e.preventDefault()
+    setDragging(false)
+    handler(e)
   }
 
   const selectedRegion = REGIONS.find((r) => r.key === region)
@@ -92,7 +103,7 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
             </span>
           </button>
           <h2 className="form-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <PasteList size="M" /> Campaign Brief
+            Campaign Brief
           </h2>
           <p className="form-sub">Fill in the details below to generate your campaign assets</p>
         </div>
@@ -180,8 +191,11 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
             Import Brief File <span className="form-optional">optional — JSON or YAML</span>
           </label>
           <div
-            className={`form-dropzone ${briefFile ? 'loaded' : ''}`}
+            className={`form-dropzone ${briefFile ? 'loaded' : ''} ${isDraggingBrief ? 'dragging' : ''}`}
             onClick={() => document.getElementById('brief-file-input')?.click()}
+            onDragOver={(e) => handleDragOver(e, setIsDraggingBrief)}
+            onDragLeave={(e) => handleDragLeave(e, setIsDraggingBrief)}
+            onDrop={(e) => handleDrop(e, setIsDraggingBrief, handleBriefFileUpload)}
           >
             <input
               id="brief-file-input"
@@ -194,13 +208,15 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
               <>
                 <div className="form-dropzone-icon"><CheckmarkCircle size="M" color="positive" /></div>
                 <div className="form-dropzone-text">{briefFile.name}</div>
-                <div className="form-dropzone-sub">Brief loaded — form fields pre-filled</div>
+                <div className="form-dropzone-sub">Click to change or drag new file here</div>
               </>
             ) : (
               <>
                 <div className="form-dropzone-icon"><Document size="M" /></div>
-                <div className="form-dropzone-text">Upload brief.json or brief.yaml</div>
-                <div className="form-dropzone-sub">Auto-fills all fields below</div>
+                <div className="form-dropzone-text">
+                  <span className="upload-link">Click to upload</span> or drag brief here
+                </div>
+                <div className="form-dropzone-sub">JSON or YAML supported</div>
               </>
             )}
           </div>
@@ -211,10 +227,17 @@ export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
           <label className="form-label">
             Existing Brand Assets <span className="form-optional">optional</span>
           </label>
-          <div className="form-dropzone">
+          <div
+            className={`form-dropzone ${isDraggingAssets ? 'dragging' : ''}`}
+            onDragOver={(e) => handleDragOver(e, setIsDraggingAssets)}
+            onDragLeave={(e) => handleDragLeave(e, setIsDraggingAssets)}
+            onDrop={(e) => handleDrop(e, setIsDraggingAssets, () => alert('Asset upload simulation'))}
+          >
             <div className="form-dropzone-icon"><Attach size="M" /></div>
-            <div className="form-dropzone-text">Drop images here or click to upload</div>
-            <div className="form-dropzone-sub">If skipped, AI will generate all images</div>
+            <div className="form-dropzone-text">
+              <span className="upload-link">Select images</span> or drop them here
+            </div>
+            <div className="form-dropzone-sub">Upload product photos for higher accuracy</div>
           </div>
         </div>
 

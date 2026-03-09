@@ -1,3 +1,4 @@
+import MagicWand from '@spectrum-icons/workflow/MagicWand'
 import type { PipelineStep } from '../types'
 import './LoadingPipeline.css'
 
@@ -57,7 +58,7 @@ export const LoadingPipeline = ({ steps, progress }: LoadingPipelineProps) => {
         {/* Live commentary */}
         {runningStep >= 0 && (
           <div className="pipeline-commentary">
-            <span className="commentary-icon">🤖</span>
+            <span className="commentary-icon" style={{ display: 'flex', alignItems: 'center' }}><MagicWand size="S" /></span>
             <span className="commentary-text">"{commentary}"</span>
           </div>
         )}

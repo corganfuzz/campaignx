@@ -15,6 +15,8 @@ function App() {
     view,
     briefData,
     blueprints,
+    pastCampaigns,
+    isLoadingHistory,
     pipelineSteps,
     progress,
     failureReason,
@@ -22,6 +24,7 @@ function App() {
     startNewCampaign,
     submitBrief,
     openPastCampaign,
+    fetchRecentCampaigns,
     goHome,
     submitApproval,
   } = useCampaign()
@@ -52,6 +55,10 @@ function App() {
               <Home
                 onStartCampaign={startNewCampaign}
                 onOpenCampaign={handleOpenCampaign}
+                pastCampaigns={pastCampaigns}
+                isLoadingHistory={isLoadingHistory}
+                fetchRecentCampaigns={fetchRecentCampaigns}
+                onSubmitBrief={submitBrief}
               />
             )}
 

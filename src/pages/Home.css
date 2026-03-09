@@ -58,8 +58,156 @@
   font-size: 18px;
   color: #ffffff;
   line-height: 1.5;
-  margin: 0 auto 48px;
+  margin: 0 auto 24px;
   max-width: 700px;
+}
+
+.home-templates-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0 auto 40px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s;
+  letter-spacing: -0.2px;
+}
+
+.home-templates-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.home-templates-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Template Dialog */
+.template-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.template-dialog {
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 24px;
+  padding: 32px;
+  width: 95%;
+  max-width: 900px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: modal-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.template-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.template-dialog-header h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.template-dialog-close {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.template-dialog-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.template-dialog-sub {
+  color: #aaa;
+  font-size: 15px;
+  margin: 0 0 32px;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.template-card {
+  background: #252525;
+  border: 1px solid #3a3a3a;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.template-card:hover {
+  border-color: #0d99ff;
+  background: #2a2a2a;
+  transform: translateY(-2px);
+}
+
+.template-card-header-icon {
+  margin-bottom: 16px;
+  color: var(--accent);
+  opacity: 0.8;
+  width: 20px;
+  height: 20px;
+}
+
+.template-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.template-card-content {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #a0a0a0;
+  font-style: italic;
 }
 
 .home-input-container {
@@ -103,6 +251,10 @@
   font-family: inherit;
   min-height: 80px;
   line-height: 1.4;
+}
+
+.typing-container {
+  pointer-events: none;
 }
 
 .home-input::placeholder {

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import type { Blueprint, BriefFormData, PipelineStep } from '../types'
+import type { Blueprint, BriefFormData, PipelineStep, Campaign } from '../types'
 import { PIPELINE_STEPS } from '../data/mockData'
 
 export type AppView = 'home' | 'form' | 'loading' | 'canvas' | 'error'
@@ -43,7 +43,7 @@ function mapApiBlueprint(raw: Record<string, any>, campaignId: string): Blueprin
   }
 }
 
-// Poll GET /campaigns/{id} until blueprints arrive or timeout (~2 min)
+
 async function pollCampaign(campaignId: string): Promise<Blueprint[]> {
   const maxAttempts = 24
   const delayMs = 5000
@@ -76,10 +76,66 @@ export const useCampaign = () => {
   const [view, setView] = useState<AppView>('home')
   const [briefData, setBriefData] = useState<BriefFormData | null>(null)
   const [blueprints, setBlueprints] = useState<Blueprint[]>([])
+  const [pastCampaigns, setPastCampaigns] = useState<Campaign[]>([])
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false)
   const [pipelineSteps, setPipelineSteps] = useState<PipelineStep[]>(PIPELINE_STEPS)
   const [progress, setProgress] = useState(0)
   const [selectedImageDetail, setSelectedImageDetail] = useState<{ blueprint: Blueprint; ratio: string } | null>(null)
   const [failureReason, setFailureReason] = useState<string | null>(null)
+
+  const fetchRecentCampaigns = useCallback(async () => {
+    if (!API_BASE || API_BASE === 'undefined') {
+      console.warn('[CampaignX] API_BASE is not defined, skipping history fetch.')
+      return
+    }
+    setIsLoadingHistory(true)
+    try {
+      const res = await fetch(`${API_BASE}/campaigns`, { headers: apiHeaders })
+      if (!res.ok) throw new Error(`History fetch failed: ${res.status}`)
+      const data = await res.json()
+      console.log('[CampaignX] Raw /campaigns response:', data)
+
+      // The Lambda scan returns a FLAT array of DynamoDB items (one per product/blueprint),
+      // NOT a { campaigns: [] } wrapper. We group them by campaign_id to build one
+      // Campaign card per campaign.
+      const rawItems: any[] = Array.isArray(data) ? data : (data.campaigns || data.Items || [])
+
+      // Group blueprint items by campaign_id
+      const grouped: Record<string, any[]> = {}
+      for (const item of rawItems) {
+        const cid = item.campaign_id
+        if (!cid) continue
+        if (!grouped[cid]) grouped[cid] = []
+        grouped[cid].push(item)
+      }
+
+      // Convert each campaign group into a Campaign object
+      const campaigns: Campaign[] = Object.entries(grouped)
+        .map(([cid, items]) => {
+          const first = items[0]
+          return {
+            id: cid,
+            // products field may be a list stored on the first blueprint
+            product: (first.products as string[] | undefined)?.join(', ') || first.product_name || 'Campaign',
+            region: first.region || '',
+            audience: first.audience || '',
+            message: first.message || '',
+            language: first.language || 'en',
+            createdAt: first.created_at || new Date().toISOString(),
+            blueprints: items.map((bp) => mapApiBlueprint(bp, cid)),
+          }
+        })
+        // Sort newest first
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
+      console.log('[CampaignX] Parsed campaigns:', campaigns.length)
+      setPastCampaigns(campaigns)
+    } catch (err) {
+      console.error('[CampaignX] Failed to fetch history:', err)
+    } finally {
+      setIsLoadingHistory(false)
+    }
+  }, [])
 
   const startNewCampaign = useCallback((prefill?: string) => {
     setBriefData(
@@ -211,6 +267,8 @@ export const useCampaign = () => {
     view,
     briefData,
     blueprints,
+    pastCampaigns,
+    isLoadingHistory,
     pipelineSteps,
     progress,
     selectedImageDetail,
@@ -221,6 +279,7 @@ export const useCampaign = () => {
     startNewCampaign,
     submitBrief,
     openPastCampaign,
+    fetchRecentCampaigns,
     goHome,
     goToForm,
     submitApproval,
