@@ -1,73 +1,142 @@
-# React + TypeScript + Vite
+# Concrete Focus UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> A React-based creative operations dashboard that takes a campaign brief as input and renders AI-generated, brand-compliant advertising assets across three social platforms.
 
-Currently, two official plugins are available:
+Built with **React 19**, **Vite**, **TypeScript**, and **Adobe React Spectrum S2** (dark mode).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer | Technology |
+|-------|------------|
+| Framework | React 19 + TypeScript |
+| Bundler | Vite 7 |
+| Package Manager | Bun |
+| UI Library | Adobe React Spectrum S2 (`@react-spectrum/s2`) |
+| Icons | `@spectrum-icons/workflow` |
+| Routing | `react-router` v7 |
+| Animations | `react-type-animation` |
+| Macro Plugin | `unplugin-parcel-macros` |
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Prerequisites
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- [Bun](https://bun.sh) (`curl -fsSL https://bun.sh/install | bash`)
+- A deployed CampaignX backend (see [campaignx-infra](https://github.com/corganfuzz/campaignx-infra))
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
+
+```bash
+bun install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Environment
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a `.env.local` file in the project root:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+VITE_API_BASE_URL=https://<api-id>.execute-api.us-east-1.amazonaws.com/<stage>
+VITE_API_KEY=<api-key-from-terraform-output>
+```
+
+### Development
+
+```bash
+bun dev          # Start with live API backend
+bun dev:mock     # Start with mock data (no backend required)
+```
+
+### Production Build
+
+```bash
+bun build        # Outputs to dist/
+bun preview      # Preview production build locally
+```
+
+---
+
+## Project Structure
+
+```
+src/
+├── App.tsx                          Application shell, view router, state orchestration
+├── main.tsx                         Entry point — <Provider colorScheme="dark">
+├── index.css                        Global styles and CSS reset
+├── App.css                          Layout styles (sidebar + main content)
+│
+├── pages/
+│   ├── Home.tsx                     Dashboard — recent campaigns, template prompt builder
+│   ├── BriefForm.tsx                Manual brief form + JSON/YAML drag-and-drop import
+│   ├── LoadingPipeline.tsx          Animated generation progress while polling API
+│   ├── Canvas.tsx                   Sophia-style blueprint — 9-block campaign viewer
+│   ├── BlueprintApprovalBlock.tsx   Approve / Reject controls with reviewer notes
+│   └── ErrorScreen.tsx              Failure display with retry option
+│
+├── components/
+│   ├── layout/
+│   │   ├── TopNav.tsx               Top navigation bar with logo
+│   │   └── Sidebar.tsx              Collapsible sidebar navigation
+│   └── shared/
+│       ├── AICursor.tsx             Floating AI refinement popover per canvas block
+│       ├── ImageDetail.tsx          Full-resolution image viewer overlay
+│       └── ErrorDialog.tsx          Global error modal with retry action
+│
+├── hooks/
+│   └── useCampaign.ts              Core state machine — view transitions, API calls, polling
+│
+├── types/
+│   └── index.ts                    TypeScript interfaces (Campaign, Brief, Blueprint, etc.)
+│
+├── data/
+│   └── mockData.ts                 Mock campaign data for offline development
+│
+├── utils/
+│   ├── download.ts                 S3 presigned URL → Blob download handler
+│   └── yamlParser.ts               YAML/JSON brief file parser for drag-and-drop
+│
+└── assets/
+    ├── logo.svg                    Application logo
+    └── *.json                      Sample brief templates (Dove, Sony, ErgoPro, etc.)
+```
+
+---
+
+## Canvas Blocks
+
+The Canvas page renders a 9-block "Sophia-style" blueprint for each generated product:
+
+| Block | Content |
+|-------|---------|
+| Creative Strategy | Agent's reasoning — why this creative approach for this market |
+| Image 1:1 | Generated Instagram image (1024×1024) with download |
+| Image 9:16 | Generated TikTok/Reels image (720×1280) with download |
+| Image 16:9 | Generated YouTube image (1280×720) with download |
+| Ad Copy | Localized headline, body text, and CTA |
+| Compliance Report | Pass / Warn / Fail items, colour-coded |
+| Suggested Next Steps | Agent recommendations for this market |
+| Output Files | Folder tree of saved asset paths, cost summary |
+| Approval Status | Status badge + Approve/Reject buttons with reviewer notes |
+
+Each block supports an **AI Cursor** — a floating popover where users can type a refinement prompt to regenerate only that specific block.
+
+---
+
+## Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `bun dev` | Start local dev server (connects to live API) |
+| `bun dev:mock` | Start local dev server with mock data |
+| `bun build` | TypeScript check + production build |
+| `bun preview` | Serve the production build locally |
+| `bun lint` | Run ESLint across the project |
+
+---
+
+## Related
+
+- **Backend Infrastructure:** [campaignx-infra](https://github.com/corganfuzz/campaignx-infra) — Terraform-managed AWS stack (API Gateway, Lambda, DynamoDB, Bedrock, SQS, S3)
