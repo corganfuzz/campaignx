@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import type { Blueprint } from '../types'
+import type { Blueprint, CanvasProps } from '../types'
+import { RATIO_LABELS } from '../data/mockData'
 import { AICursor } from '../components/shared/AICursor'
 import { ImageDetail } from '../components/shared/ImageDetail'
 import { BlueprintApprovalBlock } from './BlueprintApprovalBlock'
@@ -22,12 +23,7 @@ import Camera from '@spectrum-icons/workflow/Camera'
 import Globe from '@spectrum-icons/workflow/Globe'
 import { downloadImageFromUrl } from '../utils/download'
 
-interface CanvasProps {
-  blueprints: Blueprint[]
-  onNewCampaign: () => void
-  onBack: () => void
-  submitApproval: (id: string, status: 'approved' | 'rejected', notes?: string) => Promise<void>
-}
+
 
 export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: CanvasProps) => {
   const [activeTab, setActiveTab] = useState(0)
@@ -43,11 +39,7 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
     return <Cancel size="XS" color="negative" />
   }
 
-  const ratioLabels: Record<string, string> = {
-    '1x1': 'Instagram',
-    '9x16': 'TikTok / Reels',
-    '16x9': 'YouTube / Facebook',
-  }
+
 
   return (
     <div className="canvas-page">
@@ -146,7 +138,7 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
                     )}
                   </div>
                   <div className="image-card-body">
-                    <div className="image-card-format">{ratioLabels[ratio]}</div>
+                    <div className="image-card-format">{RATIO_LABELS[ratio]}</div>
                     <div className="image-card-dims">{img.dimensions}</div>
                     <div className="image-card-actions">
                       <button

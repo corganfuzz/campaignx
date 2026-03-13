@@ -1,9 +1,8 @@
 import logo from '../../assets/logo.svg'
+import type { TopNavProps } from '../../types'
 import './TopNav.css'
 
-interface TopNavProps {
-  onHome: () => void
-}
+
 
 export const TopNav = ({ onHome }: TopNavProps) => {
   return (

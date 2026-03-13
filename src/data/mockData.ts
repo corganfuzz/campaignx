@@ -175,3 +175,67 @@ export const mockGenerateCampaign = async (
   const blueprints = Object.values(MOCK_BLUEPRINTS)
   return blueprints[productIndex % blueprints.length]
 }
+
+export const MOCK_RESPONSES: Record<string, string> = {
+  strategy: "I've updated the creative strategy to emphasize a more premium, aspirational tone while keeping the Brazilian cultural warmth. The color palette suggestion now leans toward deep ocean blues with gold accents.",
+  copy: 'Ad copy updated! The new Brazilian Portuguese version reads: "Renove sua energia todos os dias" — a more dynamic and energetic phrasing that resonates better with urban millennials.',
+  compliance: 'Full legal review complete. The word "guaranteed" has been replaced with "proven" which is compliant per regional advertising standards. All other claims are clear.',
+  default: 'Block updated based on your instructions. The AI has applied your feedback while maintaining brand consistency and regional relevance.',
+}
+
+export const RATIO_LABELS: Record<string, string> = {
+  '1x1': 'Instagram Feed',
+  '9x16': 'TikTok / Reels',
+  '16x9': 'YouTube / Facebook',
+}
+
+export const TEMPLATES = [
+  {
+    title: 'ErgoPro Launch',
+    prompt: 'Create a campaign for the ErgoPro Adjustable Stand Desk targeting remote workers in the USA. Message: "Upgrade your home office with our new smart standing desk."',
+    payload: `products:
+  - ErgoPro Adjustable Stand Desk
+region: usa
+audience: Remote workers and developers
+message: Upgrade your home office with our new smart standing desk.`
+  },
+  {
+    title: 'Dove Brazil',
+    prompt: 'Build a social campaign for Dove Shampoo and Conditioner in Brazil, targeting women 25-40 with the message: "Feel fresh every day with natural ingredients."',
+    payload: `products:
+  - Dove Shampoo
+  - Dove Conditioner
+region: brazil
+audience: Women 25-40
+message: Feel fresh every day with natural ingredients.`
+  },
+  {
+    title: 'Sony Audio Japan',
+    prompt: 'I need a campaign for the WH-1000XM6 Headphones in Japan. Target audiophiles and commuters with the message: "Experience silence like never before."',
+    payload: `products:
+  - WH-1000XM6 Headphones
+region: japan
+audience: Audiophiles and commuters
+message: Experience silence like never before.`
+  },
+  {
+    title: 'Winter Gear Germany',
+    prompt: 'Create a campaign for the Summit Series Parka and Thermal Beanie in Germany. Target winter sports enthusiasts with the message: "Conquer the cold this season."',
+    payload: `products:
+  - Summit Series Parka
+  - Thermal Beanie
+region: germany
+audience: Winter sports enthusiasts
+message: Conquer the cold this season.`
+  }
+]
+
+export const AI_COMMENTARY = [
+  'Retrieving brand guidelines from knowledge base...',
+  'Analyzing cultural trends and consumer preferences...',
+  'Cross-referencing legal constraints for this market...',
+  'Crafting creative direction with AI...',
+  'Generating hero imagery with AWS Bedrock Nova Canvas...',
+  'Resizing and adapting for 3 social formats...',
+  'Applying localized text overlays...',
+]

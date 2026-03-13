@@ -83,3 +83,71 @@ export interface BriefFormData {
   message: string
   language: string
 }
+
+export interface SidebarProps {
+  activeView: string
+  onNavigate: (view: string) => void
+  onNewCampaign: () => void
+}
+
+export interface TopNavProps {
+  onHome: () => void
+}
+
+export interface AICursorProps {
+  blockId: string
+  onClose: () => void
+}
+
+export interface ErrorDialogProps {
+  isOpen: boolean
+  onClose: () => void
+  title?: string
+  message: string | null
+  onRetry?: () => void
+}
+
+export interface ImageDetailProps {
+  blueprint: Blueprint
+  ratio: string
+  onClose: () => void
+  onRegenerate: () => void
+}
+
+export interface BlueprintApprovalBlockProps {
+  blueprint: Blueprint
+  onSubmit: (id: string, status: 'approved' | 'rejected', notes?: string) => Promise<void>
+}
+
+export interface BriefFormProps {
+  prefill: BriefFormData | null
+  onSubmit: (data: BriefFormData) => void
+  onBack: () => void
+}
+
+export interface CanvasProps {
+  blueprints: Blueprint[]
+  onNewCampaign: () => void
+  onBack: () => void
+  submitApproval: (id: string, status: 'approved' | 'rejected', notes?: string) => Promise<void>
+}
+
+export interface ErrorScreenProps {
+  failureReason: string | null
+  onRetry: () => void
+  onHome: () => void
+}
+
+export interface HomeProps {
+  onStartCampaign: (prefill?: string) => void
+  onOpenCampaign: (campaign: Campaign) => void
+  pastCampaigns: Campaign[]
+  isLoadingHistory: boolean
+  fetchRecentCampaigns: () => Promise<void>
+  onSubmitBrief: (data: BriefFormData) => Promise<void>
+}
+
+export interface LoadingPipelineProps {
+  steps: PipelineStep[]
+  progress: number
+}

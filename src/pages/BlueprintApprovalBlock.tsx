@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Blueprint } from '../types'
+import type { BlueprintApprovalBlockProps } from '../types'
 import './BlueprintApprovalBlock.css'
 
 import CheckmarkCircle from '@spectrum-icons/workflow/CheckmarkCircle'
@@ -7,12 +7,9 @@ import Cancel from '@spectrum-icons/workflow/Cancel'
 import Clock from '@spectrum-icons/workflow/Clock'
 import Bookmark from '@spectrum-icons/workflow/Bookmark'
 
-interface Props {
-  blueprint: Blueprint
-  onSubmit: (id: string, status: 'approved' | 'rejected', notes?: string) => Promise<void>
-}
 
-export function BlueprintApprovalBlock({ blueprint, onSubmit }: Props) {
+
+export function BlueprintApprovalBlock({ blueprint, onSubmit }: BlueprintApprovalBlockProps) {
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
 

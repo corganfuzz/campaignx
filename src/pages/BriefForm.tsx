@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { REGIONS } from '../data/mockData'
-import type { BriefFormData } from '../types'
+import type { BriefFormProps } from '../types'
 import { parseBriefText } from '../utils/yamlParser'
 import './BriefForm.css'
 
@@ -12,11 +12,7 @@ import Add from '@spectrum-icons/workflow/Add'
 import Attach from '@spectrum-icons/workflow/Attach'
 import Send from '@spectrum-icons/workflow/Send'
 
-interface BriefFormProps {
-  prefill: BriefFormData | null
-  onSubmit: (data: BriefFormData) => void
-  onBack: () => void
-}
+
 
 export const BriefForm = ({ prefill, onSubmit, onBack }: BriefFormProps) => {
   const [products, setProducts] = useState<string[]>(prefill?.products ?? ['', ''])
