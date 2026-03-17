@@ -4,6 +4,7 @@ export type ComplianceStatus = 'pass' | 'warn' | 'fail'
 export interface ComplianceItem {
   status: ComplianceStatus
   label: string
+  reason?: string
 }
 
 export interface CampaignImage {

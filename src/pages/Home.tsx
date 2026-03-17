@@ -229,10 +229,20 @@ export const Home = ({
                 onClick={() => onOpenCampaign(campaign)}
               >
                 <div className="campaign-card-thumb">
-                  <img
-                    src={`https://picsum.photos/seed/${campaign.id}/400/200`}
-                    alt={campaign.product}
-                  />
+                  {campaign.blueprints[0]?.images?.['16x9']?.url ? (
+                    <img
+                      src={campaign.blueprints[0].images['16x9'].url}
+                      alt={campaign.product}
+                      crossOrigin="anonymous"
+                      onError={(e) => {
+                        // Presigned URL may have expired; hide the broken image
+                        (e.target as HTMLImageElement).style.display = 'none'
+                        ;(e.target as HTMLImageElement).parentElement!.classList.add('thumb-fallback')
+                      }}
+                    />
+                  ) : (
+                    <div className="thumb-fallback" />
+                  )}
                   <div className="campaign-card-overlay">
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       Open Canvas <ArrowRight size="XS" />

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ToastQueue } from '@react-spectrum/s2'
 import type { Blueprint } from '../types'
 import './BlueprintApprovalBlock.css'
 
@@ -20,8 +21,23 @@ export function BlueprintApprovalBlock({ blueprint, onSubmit }: Props) {
 
   const handleApproval = async (status: 'approved' | 'rejected') => {
     setLoading(true)
-    await onSubmit(blueprint.id, status, notes || undefined)
-    setLoading(false)
+    try {
+      await onSubmit(blueprint.id, status, notes || undefined)
+      
+      if (status === 'approved') {
+        ToastQueue.positive('Your campaign has been approved! Sending Email notification.', {
+          timeout: 5000
+        })
+      } else {
+        ToastQueue.negative('Campaign rejected!', {
+          timeout: 5000
+        })
+      }
+    } catch (error) {
+      ToastQueue.negative('Failed to update status. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

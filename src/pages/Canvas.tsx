@@ -21,6 +21,7 @@ import Folder from '@spectrum-icons/workflow/Folder'
 import Camera from '@spectrum-icons/workflow/Camera'
 import Globe from '@spectrum-icons/workflow/Globe'
 import { downloadImageFromUrl } from '../utils/download'
+import ReactMarkdown from 'react-markdown'
 
 interface CanvasProps {
   blueprints: Blueprint[]
@@ -85,6 +86,8 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
               key={bp.id}
               className={`canvas-tab ${activeTab === i ? 'active' : ''}`}
               onClick={() => setActiveTab(i)}
+              data-index={i}
+              style={{ '--tab-color': `var(--product-color-${i % 6})` } as any}
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Box size="XS" /> {bp.product}
@@ -110,7 +113,9 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
                 </span>
               </button>
             </div>
-            <p className="block-strategy-text">{blueprint.strategy}</p>
+            <div className="block-strategy-text markdown-body">
+              <ReactMarkdown>{blueprint.strategy}</ReactMarkdown>
+            </div>
             {aiCursorBlock === 'strategy' && (
               <AICursor blockId="strategy" onClose={() => setAiCursorBlock(null)} />
             )}
@@ -197,7 +202,9 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
                     </span>
                     <div>
                       <div className="copy-lang">{c.lang}</div>
-                      <div className="copy-text">"{c.text}"</div>
+                      <div className="copy-text markdown-body">
+                        <ReactMarkdown>{`"${c.text}"`}</ReactMarkdown>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -223,7 +230,12 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
                 {blueprint.compliance.map((item, i) => (
                   <div key={i} className={`compliance-row ${item.status}`}>
                     <span className="compliance-icon">{statusIcon(item.status)}</span>
-                    <span className="compliance-label">{item.label}</span>
+                    <div className="compliance-label-wrap">
+                      <span className="compliance-label">{item.label}</span>
+                      {item.reason && (
+                        <span className="compliance-reason-content">{item.reason}</span>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

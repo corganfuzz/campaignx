@@ -84,3 +84,31 @@ textarea,
 select {
   font-family: inherit;
 }
+
+/* Toast Customization */
+[role="region"][aria-label="Notifications"] {
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  bottom: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  pointer-events: none !important;
+}
+
+[role="status"] {
+  pointer-events: auto !important;
+  padding: 16px 28px !important;
+  min-width: 320px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin-bottom: 12px !important;
+}
+
+[role="status"] > div {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}

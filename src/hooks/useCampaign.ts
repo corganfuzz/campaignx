@@ -32,7 +32,11 @@ function mapApiBlueprint(raw: Record<string, any>, campaignId: string): Blueprin
       flag: 'Global',
       text: (c.text ?? '').trim(),
     })),
-    compliance: [],
+    compliance: (raw.compliance ?? []).map((c: any) => ({
+      label: c.label ?? 'Unknown',
+      status: c.status ?? 'warn',
+      reason: c.reason ?? '',
+    })),
     nextSteps: [],
     createdAt: raw.created_at ?? new Date().toISOString(),
     approvalStatus: raw.approval_status ?? 'pending_review',
@@ -43,8 +47,8 @@ function mapApiBlueprint(raw: Record<string, any>, campaignId: string): Blueprin
 }
 
 
-async function pollCampaign(campaignId: string): Promise<Blueprint[]> {
-  const maxAttempts = 24
+async function pollCampaign(campaignId: string, expectedCount: number): Promise<Blueprint[]> {
+  const maxAttempts = 36
   const delayMs = 5000
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -60,7 +64,10 @@ async function pollCampaign(campaignId: string): Promise<Blueprint[]> {
     console.log(`[CampaignX] Poll attempt ${attempt + 1} response:`, data)
     const items: any[] = data.blueprints ?? []
 
-    if (items.length > 0) {
+    // Wait until all expected products are present and finished
+    const isFinished = items.length === expectedCount && items.every((i) => i.approval_status !== 'generating')
+
+    if (isFinished) {
       console.log('[CampaignX] Raw blueprints from API:', JSON.stringify(items, null, 2))
       const mapped = items.map((raw) => mapApiBlueprint(raw, campaignId))
       console.log('[CampaignX] Mapped blueprints (images):', mapped.map(b => ({ product: b.product, images: b.images })))
@@ -218,7 +225,7 @@ export const useCampaign = () => {
         setProgress(Math.round(((i + 1) / totalSteps) * 90))
       }
 
-      const newBlueprints = await pollCampaign(campaignId)
+      const newBlueprints = await pollCampaign(campaignId, data.products.length)
 
       setPipelineSteps((prev) => prev.map((s) => ({ ...s, status: 'done' as const })))
       setProgress(100)

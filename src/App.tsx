@@ -1,4 +1,4 @@
-import { Provider } from '@react-spectrum/s2'
+import { Provider, ToastContainer } from '@react-spectrum/s2'
 import { TopNav } from './components/layout/TopNav'
 import { Sidebar } from './components/layout/Sidebar'
 import { Home } from './pages/Home'
@@ -100,6 +100,7 @@ function App() {
           }}
         />
       </div>
+      <ToastContainer placement="bottom" />
     </Provider>
   )
 }
