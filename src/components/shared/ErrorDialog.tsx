@@ -6,14 +6,9 @@ import {
     Button,
     Text
 } from '@react-spectrum/s2';
+import type { ErrorDialogProps } from '../../types';
 
-interface ErrorDialogProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title?: string;
-    message: string | null;
-    onRetry?: () => void;
-}
+
 
 export const ErrorDialog = ({
     isOpen,

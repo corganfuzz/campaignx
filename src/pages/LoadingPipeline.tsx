@@ -1,21 +1,11 @@
 import MagicWand from '@spectrum-icons/workflow/MagicWand'
-import type { PipelineStep } from '../types'
+import type { LoadingPipelineProps } from '../types'
+import { AI_COMMENTARY } from '../data/mockData'
 import './LoadingPipeline.css'
 
-interface LoadingPipelineProps {
-  steps: PipelineStep[]
-  progress: number
-}
 
-const AI_COMMENTARY = [
-  'Retrieving brand guidelines from knowledge base...',
-  'Analyzing cultural trends and consumer preferences...',
-  'Cross-referencing legal constraints for this market...',
-  'Crafting creative direction with AI...',
-  'Generating hero imagery with AWS Bedrock Nova Canvas...',
-  'Resizing and adapting for 3 social formats...',
-  'Applying localized text overlays...',
-]
+
+
 
 export const LoadingPipeline = ({ steps, progress }: LoadingPipelineProps) => {
   const runningStep = steps.findIndex((s) => s.status === 'running')

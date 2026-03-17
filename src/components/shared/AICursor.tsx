@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import type { AICursorProps } from '../../types'
+import { MOCK_RESPONSES } from '../../data/mockData'
 import './AICursor.css'
 
 import MagicWand from '@spectrum-icons/workflow/MagicWand'
@@ -7,17 +9,9 @@ import ArrowRight from '@spectrum-icons/workflow/ArrowRight'
 import Checkmark from '@spectrum-icons/workflow/Checkmark'
 import Refresh from '@spectrum-icons/workflow/Refresh'
 
-interface AICursorProps {
-  blockId: string
-  onClose: () => void
-}
 
-const MOCK_RESPONSES: Record<string, string> = {
-  strategy: 'I\'ve updated the creative strategy to emphasize a more premium, aspirational tone while keeping the Brazilian cultural warmth. The color palette suggestion now leans toward deep ocean blues with gold accents.',
-  copy: 'Ad copy updated! The new Brazilian Portuguese version reads: "Renove sua energia todos os dias" — a more dynamic and energetic phrasing that resonates better with urban millennials.',
-  compliance: 'Full legal review complete. The word "guaranteed" has been replaced with "proven" which is compliant per regional advertising standards. All other claims are clear.',
-  default: 'Block updated based on your instructions. The AI has applied your feedback while maintaining brand consistency and regional relevance.',
-}
+
+
 
 export const AICursor = ({ blockId, onClose }: AICursorProps) => {
   const [input, setInput] = useState('')

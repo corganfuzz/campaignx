@@ -1,22 +1,14 @@
-import type { Blueprint } from '../../types'
+import type { ImageDetailProps } from '../../types'
+import { RATIO_LABELS } from '../../data/mockData'
 import './ImageDetail.css'
 
 import Refresh from '@spectrum-icons/workflow/Refresh'
 import Download from '@spectrum-icons/workflow/Download'
 import { downloadImageFromUrl } from '../../utils/download'
 
-interface ImageDetailProps {
-  blueprint: Blueprint
-  ratio: string
-  onClose: () => void
-  onRegenerate: () => void
-}
 
-const RATIO_LABELS: Record<string, string> = {
-  '1x1': 'Instagram Feed',
-  '9x16': 'TikTok / Reels',
-  '16x9': 'YouTube / Facebook',
-}
+
+
 
 export const ImageDetail = ({ blueprint, ratio, onClose, onRegenerate }: ImageDetailProps) => {
   const img = blueprint.images[ratio as keyof typeof blueprint.images]

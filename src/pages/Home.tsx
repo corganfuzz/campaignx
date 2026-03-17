@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { MOCK_PAST_CAMPAIGNS } from '../data/mockData'
-import type { Campaign, BriefFormData } from '../types'
+import { MOCK_PAST_CAMPAIGNS, TEMPLATES } from '../data/mockData'
+import type { HomeProps } from '../types'
 import { parseBriefText } from '../utils/yamlParser'
 import { TypeAnimation } from 'react-type-animation'
 import './Home.css'
@@ -13,55 +13,9 @@ import Cancel from '@spectrum-icons/workflow/Cancel'
 import AutoSelectSubject from '@react-spectrum/s2/icons/AutoSelectSubject';
 import Keyboard from '@react-spectrum/s2/icons/Keyboard';
 
-interface HomeProps {
-  onStartCampaign: (prefill?: string) => void
-  onOpenCampaign: (campaign: Campaign) => void
-  pastCampaigns: Campaign[]
-  isLoadingHistory: boolean
-  fetchRecentCampaigns: () => Promise<void>
-  onSubmitBrief: (data: BriefFormData) => Promise<void>
-}
 
-const TEMPLATES = [
-  {
-    title: 'ErgoPro Launch',
-    prompt: 'Create a campaign for the ErgoPro Adjustable Stand Desk targeting remote workers in the USA. Message: "Upgrade your home office with our new smart standing desk."',
-    payload: `products:
-  - ErgoPro Adjustable Stand Desk
-region: usa
-audience: Remote workers and developers
-message: Upgrade your home office with our new smart standing desk.`
-  },
-  {
-    title: 'Dove Brazil',
-    prompt: 'Build a social campaign for Dove Shampoo and Conditioner in Brazil, targeting women 25-40 with the message: "Feel fresh every day with natural ingredients."',
-    payload: `products:
-  - Dove Shampoo
-  - Dove Conditioner
-region: brazil
-audience: Women 25-40
-message: Feel fresh every day with natural ingredients.`
-  },
-  {
-    title: 'Sony Audio Japan',
-    prompt: 'I need a campaign for the WH-1000XM6 Headphones in Japan. Target audiophiles and commuters with the message: "Experience silence like never before."',
-    payload: `products:
-  - WH-1000XM6 Headphones
-region: japan
-audience: Audiophiles and commuters
-message: Experience silence like never before.`
-  },
-  {
-    title: 'Winter Gear Germany',
-    prompt: 'Create a campaign for the Summit Series Parka and Thermal Beanie in Germany. Target winter sports enthusiasts with the message: "Conquer the cold this season."',
-    payload: `products:
-  - Summit Series Parka
-  - Thermal Beanie
-region: germany
-audience: Winter sports enthusiasts
-message: Conquer the cold this season.`
-  }
-]
+
+
 
 export const Home = ({
   onStartCampaign,

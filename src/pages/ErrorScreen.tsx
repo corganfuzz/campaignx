@@ -1,12 +1,9 @@
+import type { ErrorScreenProps } from '../types'
 import './ErrorScreen.css'
 
 import Alert from '@spectrum-icons/workflow/Alert'
 
-interface ErrorScreenProps {
-    failureReason: string | null
-    onRetry: () => void
-    onHome: () => void
-}
+
 
 export const ErrorScreen = ({ failureReason, onRetry, onHome }: ErrorScreenProps) => {
     return (

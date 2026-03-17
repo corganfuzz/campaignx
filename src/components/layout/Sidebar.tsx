@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import type { SidebarProps } from '../../types'
 import './Sidebar.css'
 
 import Home from '@spectrum-icons/workflow/Home'
@@ -7,11 +8,7 @@ import ArrowRight from '@spectrum-icons/workflow/ArrowRight'
 import ArrowLeft from '@spectrum-icons/workflow/ArrowLeft'
 import Add from '@spectrum-icons/workflow/Add'
 
-interface SidebarProps {
-    activeView: string
-    onNavigate: (view: string) => void
-    onNewCampaign: () => void
-}
+
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate, onNewCampaign }) => {
     const [isCollapsed, setIsCollapsed] = useState(false)
