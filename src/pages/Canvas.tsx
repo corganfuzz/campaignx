@@ -81,8 +81,8 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
               data-index={i}
               style={{ '--tab-color': `var(--product-color-${i % 6})` } as any}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Box size="XS" /> {bp.product}
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Box size="S" /> {bp.product}
               </span>
             </button>
           ))}
@@ -246,7 +246,7 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
             </div>
           </div>
 
-          {/* Block G: Next Steps */}
+          {/* Block G: Next Steps
           <div className="block block-next-steps">
             <div className="block-header">
               <span className="block-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -268,7 +268,7 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Block H: Output Files + Generation Report */}
           <div className="block block-output">

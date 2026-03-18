@@ -121,7 +121,7 @@
 /* Product Tabs */
 .canvas-tabs {
   display: flex;
-  gap: 4px;
+  gap: 8px;
   padding: 12px 32px 0;
   border-bottom: 1px solid #2a2a2a;
   background: #181818;
@@ -131,15 +131,16 @@
   background: none;
   border: 1px solid transparent;
   border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  color: #666;
+  border-radius: 10px 10px 0 0;
+  color: #777;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
-  padding: 8px 16px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 12px 24px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   bottom: -1px;
+  letter-spacing: -0.01em;
 
   /* Premium Product Color Palette */
   --product-color-0: #0d99ff; /* Blue */
@@ -156,10 +157,12 @@
 }
 
 .canvas-tab.active {
-  background: #1a1a1a;
-  border-color: #2a2a2a;
-  color: #f0f0f0;
-  border-bottom-color: #1a1a1a;
+  background: #1e1e1e;
+  border-color: #333;
+  color: #fff;
+  font-weight: 600;
+  border-bottom-color: #1e1e1e;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .canvas-tab.active::after {
@@ -168,15 +171,16 @@
   top: -1px;
   left: -1px;
   right: -1px;
-  height: 3px;
+  height: 4px;
   background: var(--tab-color, #0d99ff);
-  border-radius: 8px 8px 0 0;
-  box-shadow: 0 1px 8px var(--tab-color, transparent);
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 2px 12px var(--tab-color, transparent);
 }
 
 .canvas-tab.active .spectrum-Icon {
   color: var(--tab-color, #0d99ff);
-  filter: drop-shadow(0 0 4px var(--tab-color));
+  filter: drop-shadow(0 0 6px var(--tab-color));
+  transform: scale(1.1);
 }
 
 .canvas-tab:not(.active):hover {
