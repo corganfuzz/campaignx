@@ -125,14 +125,23 @@ export const Canvas = ({ blueprints, onNewCampaign, onBack, submitApproval }: Ca
                 <div key={ratio} className="image-card">
                   <div
                     className="image-card-thumb"
-                    onClick={() => setSelectedImage({ blueprint, ratio })}
+                    onClick={() => img.url && setSelectedImage({ blueprint, ratio })}
                   >
-                    <img src={img.url} alt={img.format} crossOrigin="anonymous" />
-                    <div className="image-card-overlay">
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        View Full Size <ArrowRight size="XS" />
-                      </span>
-                    </div>
+                    {img.url ? (
+                      <img src={img.url} alt={img.format} crossOrigin="anonymous" />
+                    ) : (
+                      <div className="image-card-placeholder">
+                        <Image size="M" />
+                        <span>Asset Not Available</span>
+                      </div>
+                    )}
+                    {img.url && (
+                      <div className="image-card-overlay">
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          View Full Size <ArrowRight size="XS" />
+                        </span>
+                      </div>
+                    )}
                     <div className="image-card-ratio">{ratio.replace('x', ':')}</div>
                     {(img as any).generated !== undefined && (
                       <div className={`image-card-gen-badge ${(img as any).generated ? 'ai' : 'ref'}`}>
