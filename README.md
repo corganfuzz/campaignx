@@ -1,8 +1,8 @@
-# Concrete Focus UI
+# Concrete Focus
 
-> A React-based creative operations dashboard that takes a campaign brief as input and renders AI-generated, brand-compliant advertising assets across three social platforms.
+> A React dashboard designed to orchestrate AI-generated, brand-compliant advertising assets across three global aspect ratios.
 
-Built with **React 19**, **Vite**, **TypeScript**, and **Adobe React Spectrum S2** (dark mode).
+Built with **React 19**, **Bun**, **TypeScript**, and **Adobe React Spectrum S2** (Dark Mode).
 
 ---
 
@@ -105,23 +105,23 @@ src/
 
 ---
 
-## Canvas Blocks
+## Component Architecture
 
-The Canvas page renders a 9-block "Sophia-style" blueprint for each generated product:
+The **Campaign Canvas** renders a 9-block blueprint for each product in a campaign, reflecting the modular outputs of the AWS Generation Pipeline:
 
-| Block | Content |
-|-------|---------|
-| Creative Strategy | Agent's reasoning — why this creative approach for this market |
-| Image 1:1 | Generated Instagram image (1024×1024) with download |
-| Image 9:16 | Generated TikTok/Reels image (720×1280) with download |
-| Image 16:9 | Generated YouTube image (1280×720) with download |
-| Ad Copy | Localized headline, body text, and CTA |
-| Compliance Report | Pass / Warn / Fail items, colour-coded |
-| Suggested Next Steps | Agent recommendations for this market |
-| Output Files | Folder tree of saved asset paths, cost summary |
-| Approval Status | Status badge + Approve/Reject buttons with reviewer notes |
+| Block | Content | Technology |
+|:---|:---|:---|
+| **Creative Strategy** | Agent's market reasoning — target trends and approach. | Amazon Bedrock Agent |
+| **Image (1:1)** | High-res Instagram/Facebook Feed asset (1024x1024). | Amazon Nova Canvas |
+| **Image (9:16)** | Cinematic TikTok/Reels Vertical asset (720x1280). | Amazon Nova Canvas |
+| **Image (16:9)** | Broad-scale YouTube/Facebook Landscape asset (1280x720). | Amazon Nova Canvas |
+| **Ad Copy** | Localized headline, body text, and direct CTA. | Claude 3.5 Sonnet |
+| **Compliance Report** | Real-time audit (PII, Legal, Brand Voice) with pass/fail badges. | Claude 3.5 Haiku |
+| **Suggested Next Steps** | Actionable recommendations for market deployment. | Bedrock Agent |
+| **Asset Metadata** | S3 resolution paths, cost summary, and generation latency. | DynamoDB |
+| **Human Approval** | **HITL Interface**: Review, add notes, and finalize campaign status. | REST API (PATCH) |
 
-Each block supports an **AI Cursor** — a floating popover where users can type a refinement prompt to regenerate only that specific block.
+Each block utilizes the **AI Cursor** — an interactive popover for real-time item refinement.
 
 ---
 
